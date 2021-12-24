@@ -1,0 +1,11 @@
+logger_levels:
+  - 'debug'
+  - 'info'
+  - 'warn'
+  - 'error'
+  - 'fatal'
+
+registered_events:
+  - 'testing.event'
+  - 'event-logger-rails.logger-level.failure'
+  - 'event-logger-rails.unregistered-event.failure'
