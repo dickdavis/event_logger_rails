@@ -48,7 +48,7 @@ module EventLoggerRails
     end
 
     def config_file
-      Rails.root.join('config/event_logger.yml')
+      Rails.root.join('config/event_logger_rails.yml')
     end
 
     def reload_config
