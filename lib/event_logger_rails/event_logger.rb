@@ -9,6 +9,13 @@ module EventLoggerRails
   ##
   # Outputs event and related data logs.
   class EventLogger
+    DEFAULT_EVENTS = [
+      'event_logger_rails.logger_level.invalid',
+      'event_logger_rails.event.unregistered',
+      'event_logger_rails.event.testing'
+    ].freeze
+    private_constant :DEFAULT_EVENTS
+
     def initialize
       @logger_levels = logger_levels_from_config
       @registered_events = registered_events_from_config
@@ -67,9 +74,18 @@ module EventLoggerRails
     end
 
     def validate_event(event)
-      return true if registered_events.include?(event)
+      return true if event_registered?(event) || default_event?(event)
 
       raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: event)
+    end
+
+    def event_registered?(event)
+      parsed_event = event.split('.').map(&:to_sym)
+      registered_events.dig(*parsed_event)
+    end
+
+    def default_event?(event)
+      DEFAULT_EVENTS.include?(event)
     end
 
     def output_device
