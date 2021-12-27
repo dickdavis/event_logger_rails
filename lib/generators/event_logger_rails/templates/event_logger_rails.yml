@@ -1,0 +1,25 @@
+##
+# Allowed logger levels for use with EventLoggerRails
+# You can add/remove levels, if desired; however, an exception will occur
+# when using a logger level that is not enumerated here.
+#
+logger_levels:
+  - 'debug'
+  - 'info'
+  - 'warn'
+  - 'error'
+  - 'fatal'
+
+##
+# Registered events for use with EventLoggerRails
+# Add your custom event definitions to this section; attempting to log events
+# that are not registered here will result in an exception.
+#
+# Example event:
+#
+# registered_events:
+#   user:
+#     signup:
+#       success: 'Indicates a successful user signup.'
+#
+registered_events:

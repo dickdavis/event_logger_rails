@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2021-12-27
+
+### Added
+
+- Added install generator.
+- Added README instructions.
+
+### Changed
+
+- Changed the name of the configuration file.
+- Improved registered event validation.
+
+### Fixed
+
+- Fixed exception handling in controller concern.
+- Fixed config file reloading.
+
 ## [0.1.0] - 2021-12-24
 
 ### Added
@@ -14,4 +31,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 
 [Unreleased]: https://github.com/d3d1rty/event_logger_rails/compare/0.1.0...HEAD
+[0.2.0]: https://github.com/d3d1rty/event_logger_rails/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/d3d1rty/event_logger_rails/releases/tag/0.1.0

@@ -1,0 +1,14 @@
+logger_levels:
+  - 'debug'
+  - 'info'
+  - 'warn'
+  - 'error'
+  - 'fatal'
+
+registered_events:
+  user:
+    signup:
+      success: 'Indicates a successful user signup.'
+      failure: 'Indicates a failed user signup.'
+    login:
+      failure: 'oops'

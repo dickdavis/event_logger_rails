@@ -9,10 +9,10 @@ module EventLoggerRails
     def log_event(level, event, **data)
       data_to_log = data_from_request.merge(data)
       EventLoggerRails.log(level, event, **data_to_log)
-    rescue EventLogger::UnregisteredEvent => e
-      log_event :error, 'event-logger-rails.unregistered-event.failure', message: e.message
-    rescue EventLogger::InvalidLoggerLevel => e
-      log_event :error, 'event-logger-rails.logger-level.failure', message: e.message
+    rescue EventLoggerRails::Exceptions::UnregisteredEvent => e
+      log_event :error, 'event_logger_rails.event.unregistered', message: e.message
+    rescue EventLoggerRails::Exceptions::InvalidLoggerLevel => e
+      log_event :error, 'event_logger_rails.logger_level.invalid', message: e.message
     end
 
     def data_from_request
