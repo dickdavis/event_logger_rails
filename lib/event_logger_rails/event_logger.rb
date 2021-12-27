@@ -37,7 +37,7 @@ module EventLoggerRails
     end
 
     def data_from_config
-      @data_from_config ||= YAML.safe_load(File.read(config_file)).deep_symbolize_keys
+      YAML.safe_load(File.read(config_file)).deep_symbolize_keys
     end
 
     def config_file
