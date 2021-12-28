@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2021-12-27
+
+### Fixed
+
+- Fixed README instructions.
+
 ## [0.2.0] - 2021-12-27
 
 ### Added
@@ -31,5 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release
 
 [Unreleased]: https://github.com/d3d1rty/event_logger_rails/compare/0.1.0...HEAD
+[0.2.1]: https://github.com/d3d1rty/event_logger_rails/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/d3d1rty/event_logger_rails/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/d3d1rty/event_logger_rails/releases/tag/0.1.0
