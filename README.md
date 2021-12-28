@@ -21,7 +21,7 @@ Then, from the controller action that processes user signup's, include the `Logg
 
 ```ruby
 class UsersController < ApplicationController
-  include Loggable
+  include EventLoggerRails::Loggable
 
   def create
     user = User.new(user_params)
@@ -46,6 +46,18 @@ In this example, a possible successful signup could be structured like this:
 
 ```
 [ERROR | 2021-12-27T20:57:06+00:00 | user.signup.failure] {"controller"=>"Users", "action"=>"create", "method"=>"POST", "path"=>"/users", "remote_ip"=>"::1", "parameters"=>"{ "user"=>{ "first_name"=>"Test", "last_name"=>"User" } }", "errors"=>"{ "email"=>"is missing" }"}
+```
+
+If you fail to register an event, the logger will emit an `event_logger_rails.event.unregistered` event:
+
+```
+[ERROR | 2021-12-27T20:57:06+00:00 | event_logger_rails.event.unregistered] {"controller"=>"Users", "action"=>"create", "method"=>"POST", "path"=>"/users", "remote_ip"=>"::1", "parameters"=>"{ "user"=>{ "first_name"=>"Test", "last_name"=>"User" } }", "message"=>"Event provided not registered: user.signup.failure"}
+```
+
+If you provide an invalid log level, the logger will emit an `event_logger_rails.logger_level.invalid` event:
+
+```
+[ERROR | 2021-12-27T20:57:06+00:00 | event_logger_rails.logger_level.invalid] {"controller"=>"Users", "action"=>"create", "method"=>"POST", "path"=>"/users", "remote_ip"=>"::1", "parameters"=>"{ "user"=>{ "first_name"=>"Test", "last_name"=>"User" } }", "message"=>"Invalid logger level provided: 'foo'. Valid levels: debug, info, warn, error, fatal."}
 ```
 
 The log entry indicates the logger level (useful for filtering results), the registered event, and more useful information from the controller and request.
