@@ -10,6 +10,7 @@ group :development do
   gem 'reek'
   gem 'rubocop'
   gem 'rubocop-performance', require: false
+  gem 'rubocop-rspec', require: false
   gem 'sqlite3'
 end
 
