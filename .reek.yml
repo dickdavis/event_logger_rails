@@ -1,0 +1,6 @@
+exclude_paths:
+  - spec/dummy/
+
+detectors:
+  TooManyStatements:
+    max_statements: 10

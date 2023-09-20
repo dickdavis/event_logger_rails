@@ -6,8 +6,8 @@ module EventLoggerRails
   class Engine < ::Rails::Engine
     isolate_namespace EventLoggerRails
 
-    config.generators do |g|
-      g.test_framework :rspec
+    config.generators do |generator|
+      generator.test_framework :rspec
     end
   end
 end
