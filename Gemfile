@@ -11,6 +11,8 @@ group :development do
   gem 'rubocop'
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
+  gem 'solargraph'
+  gem 'solargraph-rails'
   gem 'sqlite3'
 end
 
