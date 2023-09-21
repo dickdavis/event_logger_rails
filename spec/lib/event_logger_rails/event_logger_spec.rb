@@ -12,20 +12,20 @@ RSpec.describe EventLoggerRails::EventLogger do
     let(:event) { instance_double(EventLoggerRails::Event, to_s: 'foo.bar', valid?: true) }
     let(:data) { { foo: 'bar' } }
 
-    let(:output_spy) { instance_spy(File) }
+    let(:buffer) { StringIO.new }
 
     before do
       allow(EventLoggerRails::Level).to receive(:new).and_return(level)
       allow(EventLoggerRails::Event).to receive(:new).and_return(event)
-      allow(File).to receive(:open).and_return(output_spy)
+      allow(IO).to receive(:open).and_return(buffer)
     end
 
     it 'logs the data with the level, datetime, and event tags' do
       method_call
       date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-      expect(output_spy)
-        .to have_received(:write)
-        .with(/\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/)
+      expect(buffer.string).to match(
+        /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
+      )
     end
 
     context 'when an identifier is provided instead of an EventLoggerRails::Event object' do
@@ -38,9 +38,9 @@ RSpec.describe EventLoggerRails::EventLogger do
       it 'logs the data with the level, datetime, and event tags' do
         method_call
         date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-        expect(output_spy)
-          .to have_received(:write)
-          .with(/\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/)
+        expect(buffer.string).to match(
+          /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
+        )
       end
     end
 
@@ -54,9 +54,9 @@ RSpec.describe EventLoggerRails::EventLogger do
       it 'logs the data with the level, datetime, and event tags' do
         method_call
         date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-        expect(output_spy)
-          .to have_received(:write)
-          .with(/\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/)
+        expect(buffer.string).to match(
+          /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
+        )
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe EventLoggerRails::EventLogger do
         rescue EventLoggerRails::Exceptions::InvalidLoggerLevel
           nil
         end
-        expect(output_spy).not_to have_received(:write)
+        expect(buffer.size).to be(0)
       end
 
       it 'raises an error' do
@@ -98,7 +98,7 @@ RSpec.describe EventLoggerRails::EventLogger do
         rescue EventLoggerRails::Exceptions::UnregisteredEvent
           nil
         end
-        expect(output_spy).not_to have_received(:write)
+        expect(buffer.size).to be(0)
       end
 
       it 'raises an error' do
