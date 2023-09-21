@@ -20,3 +20,7 @@ group :test do
   gem 'rspec-rails'
   gem 'warning'
 end
+
+group :development, :test do
+  gem 'debug'
+end
