@@ -33,4 +33,8 @@ module EventLoggerRails
   def self.log(*tags, **params)
     logger.log(*tags, **params)
   end
+
+  def self.reset
+    @logger = nil
+  end
 end
