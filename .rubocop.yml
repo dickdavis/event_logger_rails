@@ -5,3 +5,9 @@ require:
 AllCops:
   TargetRubyVersion: 3.1
   NewCops: enable
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+RSpec/ExampleLength:
+  Max: 10
+RSpec/NestedGroups:
+  Max: 4
