@@ -5,16 +5,44 @@ require 'rails_helper'
 RSpec.describe EventLoggerRails::Event do
   subject(:event) { described_class.new(identifier) }
 
+  before do
+    EventLoggerRails.setup do |config|
+      config.registered_events = {
+        foo: { bar: 'This is an event.' }
+      }
+    end
+  end
+
+  describe 'attributes' do
+    context 'when an registered event is provided' do
+      let(:identifier) { 'foo.bar' }
+
+      it 'identifer contains the provided identifier' do
+        expect(event.identifier).to eq('foo.bar')
+      end
+
+      it 'description contains the corresponding description' do
+        expect(event.description).to eq('This is an event.')
+      end
+    end
+
+    context 'when an unregistered event is provided' do
+      let(:identifier) { 'foobarbaz' }
+
+      it 'identifer is nil' do
+        expect(event.identifier).to be_nil
+      end
+
+      it 'description is nil' do
+        expect(event.description).to be_nil
+      end
+    end
+  end
+
   describe '#valid?' do
     subject(:method_call) { event.valid? }
 
-    let(:valid_registered_event) { 'valid.event' }
-
-    before do
-      EventLoggerRails.setup do |config|
-        config.registered_events = { valid: { event: 'This is a valid event.' } }
-      end
-    end
+    let(:valid_registered_event) { 'foo.bar' }
 
     context 'when provided identifier is not a registered event' do
       let(:identifier) { 'foobar' }
