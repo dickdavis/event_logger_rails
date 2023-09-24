@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'event'
-require_relative 'level'
 require_relative 'exceptions/invalid_logger_level'
 require_relative 'exceptions/unregistered_event'
 
@@ -9,24 +8,31 @@ module EventLoggerRails
   ##
   # Outputs event and related data logs.
   class EventLogger
-    def initialize
-      output_device = Rails.env.test? ? File.open(File::NULL, 'w') : $stdout
-      @logger = ActiveSupport::TaggedLogging.new(Logger.new(output_device))
+    def initialize(output_device: $stdout)
+      @logger = Logger.new(output_device)
     end
 
-    # rubocop:disable Metrics/AbcSize
-    def log(level, event, **params)
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+    def log(event, level = :warn, **data)
       event = event.is_a?(EventLoggerRails::Event) ? event : EventLoggerRails::Event.new(event)
       raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: event) unless event.valid?
 
-      level = level.is_a?(EventLoggerRails::Level) ? level : EventLoggerRails::Level.new(level)
-      raise EventLoggerRails::Exceptions::InvalidLoggerLevel.new(logger_level: level) unless level.valid?
-
-      logger.tagged("#{level.to_s.upcase} | #{DateTime.current} | #{event}") do
-        logger.send(level.to_sym, **params.as_json)
+      logger.formatter = proc do |severity, datetime, _progname, message|
+        JSON.dump(severity:, timestamp: datetime.to_s, message:)
       end
+
+      begin
+        logger.send(level) do
+          { event_identifier: event.identifier, event_description: event.description }.merge(data)
+        end
+      rescue NoMethodError
+        raise EventLoggerRails::Exceptions::InvalidLoggerLevel.new(logger_level: level)
+      end
+    rescue EventLoggerRails::Exceptions::UnregisteredEvent,
+           EventLoggerRails::Exceptions::InvalidLoggerLevel => error
+      log(error.event, :error, message: error.message)
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     private
 

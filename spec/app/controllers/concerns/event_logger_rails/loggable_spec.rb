@@ -6,12 +6,17 @@ class DummyController < ActionController::Base
   include EventLoggerRails::Loggable
 
   def test_one
-    log_event :info, 'event_logger_rails.event.testing'
+    log_event 'event_logger_rails.event.testing'
     head :no_content
   end
 
   def test_two
-    log_event :info, 'event_logger_rails.event.testing', test: 'two'
+    log_event 'event_logger_rails.event.testing', test: 'two'
+    head :no_content
+  end
+
+  def test_three
+    log_event 'event_logger_rails.event.testing', :info
     head :no_content
   end
 end
@@ -37,10 +42,7 @@ RSpec.describe EventLoggerRails::Loggable, type: :request do
     Rails.application.routes.draw do
       get :test_one, to: 'dummy#test_one', as: :test_one
       get :test_two, to: 'dummy#test_two', as: :test_two
-    end
-
-    EventLoggerRails.setup do |config|
-      config.logger_levels = %i[info]
+      get :test_three, to: 'dummy#test_three', as: :test_three
     end
   end
 
@@ -52,8 +54,8 @@ RSpec.describe EventLoggerRails::Loggable, type: :request do
       expect(logger_spy)
         .to have_received(:log)
         .with(
-          :info,
           'event_logger_rails.event.testing',
+          :warn,
           data_from_request
         )
     end
@@ -67,9 +69,24 @@ RSpec.describe EventLoggerRails::Loggable, type: :request do
       expect(logger_spy)
         .to have_received(:log)
         .with(
-          :info,
           'event_logger_rails.event.testing',
+          :warn,
           data_from_request.merge({ test: 'two' })
+        )
+    end
+  end
+
+  context 'with optional logger level provided' do
+    before { EventLoggerRails.reset }
+
+    it 'calls the event logger' do
+      get(test_three_path, params:)
+      expect(logger_spy)
+        .to have_received(:log)
+        .with(
+          'event_logger_rails.event.testing',
+          :info,
+          data_from_request
         )
     end
   end
