@@ -3,121 +3,116 @@
 require 'rails_helper'
 
 RSpec.describe EventLoggerRails::EventLogger do
-  subject(:event_logger) { described_class.new }
+  subject(:event_logger) { described_class.new(output_device: File.open(File::NULL, 'w')) }
 
   describe '#log' do
-    subject(:method_call) { event_logger.log(level, event, **data) }
+    subject(:method_call) { event_logger.log(*args, **data) }
 
-    let(:level) { instance_double(EventLoggerRails::Level, to_s: 'info', to_sym: :info, valid?: true) }
-    let(:event) { instance_double(EventLoggerRails::Event, to_s: 'foo.bar', valid?: true) }
+    let(:args) { [event, level].compact }
+    let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
+    let(:level) { nil }
     let(:data) { { foo: 'bar' } }
 
     let(:buffer) { StringIO.new }
 
     before do
-      allow(EventLoggerRails::Level).to receive(:new).and_return(level)
-      allow(EventLoggerRails::Event).to receive(:new).and_return(event)
       allow(IO).to receive(:open).and_return(buffer)
     end
 
-    it 'logs the data with the level, datetime, and event tags' do
+    # rubocop:disable RSpec/ExampleLength
+    it 'logs the default severity, timestamp, event identifier, description, and data' do
       method_call
-      date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-      expect(buffer.string).to match(
-        /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
+      log_output = JSON.parse(buffer.string, symbolize_names: true)
+      expect(log_output).to include(
+        message: include(
+          event_description: event.description,
+          event_identifier: event.identifier,
+          **data
+        ),
+        severity: 'WARN',
+        timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
       )
     end
+    # rubocop:enable RSpec/ExampleLength
 
     context 'when an identifier is provided instead of an EventLoggerRails::Event object' do
       let(:event) { 'event_logger_rails.event.testing' }
 
-      before do
-        allow(EventLoggerRails::Event).to receive(:new).and_call_original
-      end
-
-      it 'logs the data with the level, datetime, and event tags' do
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the severity, timestamp, event identifier, description, and data' do
         method_call
-        date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-        expect(buffer.string).to match(
-          /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          message: include(
+            event_description: 'Event reserved for testing.',
+            event_identifier: 'event_logger_rails.event.testing',
+            **data
+          ),
+          severity: 'WARN',
+          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
         )
       end
-    end
-
-    context 'when a level symbol is provided instead of an EventLoggerRails::Level object' do
-      let(:level) { :info }
-
-      before do
-        allow(EventLoggerRails::Level).to receive(:new).and_call_original
-      end
-
-      it 'logs the data with the level, datetime, and event tags' do
-        method_call
-        date_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}/
-        expect(buffer.string).to match(
-          /\[(#{level.to_s.upcase}) \| #{date_regexp} \| (#{event})\] (#{data.as_json})/
-        )
-      end
-    end
-
-    context 'when the level is not valid' do
-      let(:level) { instance_double(EventLoggerRails::Level, to_s: 'info', to_sym: :info, valid?: false) }
-
-      it 'does not output a log entry' do
-        begin
-          method_call
-        rescue EventLoggerRails::Exceptions::InvalidLoggerLevel
-          nil
-        end
-        expect(buffer.size).to be(0)
-      end
-
-      it 'raises an error' do
-        expect { method_call }.to raise_error(EventLoggerRails::Exceptions::InvalidLoggerLevel)
-      end
-
-      it 'initializes the error with the logger level' do
-        allow(EventLoggerRails::Exceptions::InvalidLoggerLevel).to receive(:new).and_call_original
-
-        begin
-          method_call
-        rescue EventLoggerRails::Exceptions::InvalidLoggerLevel
-          nil
-        end
-
-        expect(EventLoggerRails::Exceptions::InvalidLoggerLevel).to have_received(:new).with(logger_level: level)
-      end
+      # rubocop:enable RSpec/ExampleLength
     end
 
     context 'when the event is not valid' do
-      let(:event) { instance_double(EventLoggerRails::Event, to_s: 'foo.bar', valid?: false) }
+      let(:event) { EventLoggerRails::Event.new('foo.bar') }
 
-      it 'does not output a log entry' do
-        begin
-          method_call
-        rescue EventLoggerRails::Exceptions::UnregisteredEvent
-          nil
-        end
-        expect(buffer.size).to be(0)
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          message: include(
+            event_description: 'Indicates provided event was unregistered.',
+            event_identifier: 'event_logger_rails.event.unregistered',
+            message: 'Event provided not registered: foo.bar'
+          ),
+          severity: 'ERROR',
+          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+        )
       end
+      # rubocop:enable RSpec/ExampleLength
+    end
 
-      it 'raises an error' do
-        expect { method_call }.to raise_error(EventLoggerRails::Exceptions::UnregisteredEvent)
+    context 'when a valid logger level is provided' do
+      let(:level) { :info }
+
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the provided severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          message: include(
+            event_description: event.description,
+            event_identifier: event.identifier,
+            **data
+          ),
+          severity: 'INFO',
+          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+        )
       end
+      # rubocop:enable RSpec/ExampleLength
+    end
 
-      it 'initializes the error with the event' do
-        allow(EventLoggerRails::Exceptions::UnregisteredEvent).to receive(:new).and_call_original
+    context 'when the logger level is not valid' do
+      let(:level) { :foo }
 
-        begin
-          method_call
-        rescue EventLoggerRails::Exceptions::UnregisteredEvent
-          nil
-        end
-
-        expect(EventLoggerRails::Exceptions::UnregisteredEvent)
-          .to have_received(:new)
-          .with(unregistered_event: event)
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          message: include(
+            event_description: 'Indicates provided level was invalid.',
+            event_identifier: 'event_logger_rails.logger_level.invalid',
+            message: "Invalid logger level provided: 'foo'. Valid levels: :debug, :info, :warn, :error, :unknown."
+          ),
+          severity: 'ERROR',
+          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+        )
       end
+      # rubocop:enable RSpec/ExampleLength
     end
   end
 end

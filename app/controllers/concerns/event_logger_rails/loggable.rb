@@ -6,13 +6,11 @@ module EventLoggerRails
   module Loggable
     extend ActiveSupport::Concern
 
-    def log_event(level, event, **data)
-      data_to_log = data_from_request.merge(data)
-      EventLoggerRails.log(level, event, **data_to_log)
-    rescue EventLoggerRails::Exceptions::UnregisteredEvent,
-           EventLoggerRails::Exceptions::InvalidLoggerLevel => error
-      log_event :error, error.event, message: error.message
+    def log_event(event, level = :warn, **data)
+      EventLoggerRails.log(event, level, **data_from_request.merge(data))
     end
+
+    private
 
     def data_from_request
       {

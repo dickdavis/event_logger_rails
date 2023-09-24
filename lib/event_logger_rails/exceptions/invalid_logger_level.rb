@@ -15,7 +15,7 @@ module EventLoggerRails
 
       def message
         "Invalid logger level provided: '#{logger_level.to_sym}'. " \
-          "Valid levels: #{EventLoggerRails.logger_levels.map(&:inspect).join(', ')}."
+          'Valid levels: :debug, :info, :warn, :error, :unknown.'
       end
 
       private
