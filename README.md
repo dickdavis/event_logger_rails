@@ -83,13 +83,23 @@ Or install it yourself as:
 $ gem install event_logger_rails
 ```
 
-Run the install generator to create a config file (`config/event_logger_rails.yml`):
+Run the install generator to create a config file (`config/event_logger_rails.yml`) and example initializer:
 
 ```bash
 $ bin/rails generate event_logger_rails:install
 ```
 
 Add your events to the generated config file following the structure of the examples.
+
+You may opt to load in registered events in `config/application.rb` using the `config_for` helper provided by Rails.
+
+```ruby
+EventLoggerRails.setup do |config|
+  config.registered_events = config_for[:registered_events]
+end
+```
+
+Doing so eliminates the need for the generated initializer, so you should delete it if you choose to go this route.
 
 ## Contributing
 
