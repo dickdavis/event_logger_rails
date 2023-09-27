@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TestController < ApplicationController
-  include EventLoggerRails::Loggable
+  include EventLoggerRails::LoggableController
 
   def show
     log_event :info, 'user.login.failure'

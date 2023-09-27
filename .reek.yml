@@ -4,3 +4,9 @@ exclude_paths:
 detectors:
   TooManyStatements:
     max_statements: 10
+  FeatureEnvy:
+    exclude:
+      - EventLoggerRails::Extensions::Loggable#details_for_trace
+  UtilityFunction:
+    exclude:
+      - EventLoggerRails::Extensions::Loggable#details_for_trace

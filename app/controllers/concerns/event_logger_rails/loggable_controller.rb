@@ -3,16 +3,11 @@
 module EventLoggerRails
   ##
   # Provides event logging with relevant controller/request data.
-  module Loggable
+  module LoggableController
     extend ActiveSupport::Concern
+    include EventLoggerRails::Extensions::Loggable
 
-    def log_event(event, level = :warn, **data)
-      EventLoggerRails.log(event, level, **data_from_request.merge(data))
-    end
-
-    private
-
-    def data_from_request
+    def optional_data
       {
         controller: controller_name.camelcase,
         action: action_name,
@@ -22,5 +17,7 @@ module EventLoggerRails
         parameters: request.query_parameters.to_json
       }
     end
+
+    private :optional_data
   end
 end
