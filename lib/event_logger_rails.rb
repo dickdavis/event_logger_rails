@@ -8,6 +8,7 @@ require 'event_logger_rails/event_logger'
 require 'event_logger_rails/event'
 require 'event_logger_rails/exceptions/invalid_logger_level'
 require 'event_logger_rails/exceptions/unregistered_event'
+require 'event_logger_rails/extensions/loggable'
 
 ##
 # Namespace for EventLoggerRails gem
