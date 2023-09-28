@@ -5,16 +5,16 @@ module EventLoggerRails
     ##
     # Provides event logging with relevant model data.
     module Loggable
-      def log_event(event, level = :warn, **data)
+      def log_event(event, level: :warn, data: {})
         logger_trace.disable if instance_variable_defined?(:@logger_call_stack)
         EventLoggerRails.log(event, level, data.merge(optional_data).merge(trace_data))
       end
 
-      def trace_and_log_event(event, level = :warn, **data)
+      def trace_and_log_event(event, level: :warn, data: {})
         logger_trace.enable
         yield
         logger_trace.disable
-        log_event(event, level, **data)
+        log_event(event, level:, data:)
       end
 
       private

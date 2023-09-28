@@ -4,7 +4,7 @@ class TestController < ApplicationController
   include EventLoggerRails::LoggableController
 
   def show
-    log_event :info, 'user.login.failure'
+    log_event 'user.login.failure', :info
     render json: { message: 'It works.' }, status: :ok
   end
 end
