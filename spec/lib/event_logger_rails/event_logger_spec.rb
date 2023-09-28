@@ -6,11 +6,10 @@ RSpec.describe EventLoggerRails::EventLogger do
   subject(:event_logger) { described_class.new(output_device: File.open(File::NULL, 'w')) }
 
   describe '#log' do
-    subject(:method_call) { event_logger.log(*args, **data) }
+    subject(:method_call) { event_logger.log(event, level, **data) }
 
-    let(:args) { [event, level].compact }
     let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
-    let(:level) { nil }
+    let(:level) { :warn }
     let(:data) { { foo: 'bar' } }
 
     let(:buffer) { StringIO.new }
@@ -113,6 +112,23 @@ RSpec.describe EventLoggerRails::EventLogger do
         )
       end
       # rubocop:enable RSpec/ExampleLength
+    end
+
+    context 'when data is not provided' do
+      subject(:method_call) { event_logger.log(event, level) }
+
+      it 'logs the default severity, timestamp, event identifier, and description' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          message: include(
+            event_description: event.description,
+            event_identifier: event.identifier
+          ),
+          severity: 'WARN',
+          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+        )
+      end
     end
   end
 end

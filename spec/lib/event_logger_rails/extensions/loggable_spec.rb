@@ -18,11 +18,11 @@ class DummyClass
   end
 
   def test_three
-    log_event 'event_logger_rails.event.testing', test: 'two'
+    log_event 'event_logger_rails.event.testing', data: { test: 'two' }
   end
 
   def test_four
-    log_event 'event_logger_rails.event.testing', :info
+    log_event 'event_logger_rails.event.testing', level: :info
   end
 
   private
