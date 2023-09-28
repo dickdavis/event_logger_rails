@@ -3,7 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe EventLoggerRails::EventLogger do
-  subject(:event_logger) { described_class.new(output_device: File.open(File::NULL, 'w')) }
+  subject(:event_logger) do
+    described_class.new(logdev: File.open(File::NULL, 'w'), logger_class: Logger)
+  end
 
   describe '#log' do
     subject(:method_call) { event_logger.log(event, level, **data) }
