@@ -15,7 +15,7 @@ module EventLoggerRails
       end
     end
 
-    def log(event, level, **data)
+    def log(event, level, data = {})
       event = event.is_a?(EventLoggerRails::Event) ? event : EventLoggerRails::Event.new(event)
       raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: event) unless event.valid?
 
