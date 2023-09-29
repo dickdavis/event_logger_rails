@@ -13,7 +13,7 @@ module EventLoggerRails
         controller: controller_name.camelcase,
         format: request.headers['Content-Type'],
         method: request.method,
-        parameters: request.parameters.except(%i[controller action format]),
+        parameters: request.parameters.except(:controller, :action, :format),
         path: request.path,
         remote_ip: request.remote_ip
       }
