@@ -5,9 +5,19 @@
 #
 # Example event:
 #
-# registered_events:
+# shared:
 #   user:
 #     signup:
 #       success: 'Indicates a successful user signup.'
 #
-registered_events:
+shared:
+
+##
+# Add events that are unique to specific environments by uncommenting the appropriate
+# environment and adding the event.
+#
+# development:
+#
+# test:
+#
+# production:
