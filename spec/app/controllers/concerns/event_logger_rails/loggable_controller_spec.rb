@@ -24,13 +24,13 @@ class DummyController < ActionController::Base
 end
 
 RSpec.describe EventLoggerRails::LoggableController, type: :request do
-  let(:params) { { foo: 'bar' } }
+  let(:params) { { 'foo' => 'bar' } }
   let(:data_from_request) do
     {
       action: controller.action_name,
       controller: controller.controller_name.camelcase,
       method: request.method,
-      parameters: params.to_json,
+      parameters: request.params,
       path: request.path,
       remote_ip: request.remote_ip
     }
