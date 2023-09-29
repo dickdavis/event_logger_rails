@@ -14,7 +14,7 @@ module EventLoggerRails
         method: request.method,
         path: request.path,
         remote_ip: request.remote_ip,
-        parameters: request.query_parameters.to_json
+        parameters: request.parameters
       }
     end
 

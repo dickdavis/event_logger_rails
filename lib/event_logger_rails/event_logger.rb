@@ -31,7 +31,8 @@ module EventLoggerRails
 
     def log_message(event, level, data)
       logger.send(level) do
-        { event_identifier: event.identifier, event_description: event.description }.merge(data)
+        filtered_data = ActiveSupport::ParameterFilter.new(EventLoggerRails.sensitive_fields).filter(data)
+        { event_identifier: event.identifier, event_description: event.description }.merge(filtered_data)
       end
     rescue NoMethodError
       raise EventLoggerRails::Exceptions::InvalidLoggerLevel.new(logger_level: level)
