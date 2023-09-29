@@ -29,6 +29,7 @@ RSpec.describe EventLoggerRails::LoggableController, type: :request do
     {
       action: controller.action_name,
       controller: controller.controller_name.camelcase,
+      format: request.headers['Content-Type'],
       method: request.method,
       parameters: request.params,
       path: request.path,
