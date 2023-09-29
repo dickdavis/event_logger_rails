@@ -9,12 +9,13 @@ module EventLoggerRails
 
     def optional_data
       {
-        controller: controller_name.camelcase,
         action: action_name,
+        controller: controller_name.camelcase,
+        format: request.headers['Content-Type'],
         method: request.method,
+        parameters: request.parameters.except(%i[controller action format]),
         path: request.path,
-        remote_ip: request.remote_ip,
-        parameters: request.parameters
+        remote_ip: request.remote_ip
       }
     end
 
