@@ -18,21 +18,23 @@ module EventLoggerRails
   autoload :InvalidLoggerLevel, 'event_logger_rails/exceptions/invalid_logger_level'
   autoload :UnregisteredEvent, 'event_logger_rails/exceptions/unregistered_event'
 
+  mattr_accessor :logdev
+  mattr_accessor :logger_class
   mattr_accessor :registered_events
 
   def self.setup
     yield self
   end
 
-  def self.logger
-    @logger ||= EventLogger.new
+  def self.event_logger
+    @event_logger ||= EventLogger.new(logdev:, logger_class:)
   end
 
-  def self.log(*tags, **params)
-    logger.log(*tags, **params)
+  def self.log(...)
+    event_logger.log(...)
   end
 
   def self.reset
-    @logger = nil
+    @event_logger = nil
   end
 end

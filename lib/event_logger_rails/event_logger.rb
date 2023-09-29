@@ -8,10 +8,10 @@ module EventLoggerRails
   ##
   # Outputs event and related data logs.
   class EventLogger
-    def initialize(output_device: $stdout)
-      @logger = Logger.new(output_device)
+    def initialize(logdev:, logger_class:)
+      @logger = logger_class.new(logdev)
       @logger.formatter = proc do |severity, datetime, _progname, message|
-        JSON.dump(severity:, timestamp: datetime.to_s, message:)
+        "#{JSON.dump(severity:, timestamp: datetime.to_s, message:)}\n"
       end
     end
 
@@ -19,17 +19,17 @@ module EventLoggerRails
       event = event.is_a?(EventLoggerRails::Event) ? event : EventLoggerRails::Event.new(event)
       raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: event) unless event.valid?
 
-      log_message(event, level, **data)
+      log_message(event, level, data)
     rescue EventLoggerRails::Exceptions::UnregisteredEvent,
            EventLoggerRails::Exceptions::InvalidLoggerLevel => error
-      log(error.event, :error, message: error.message)
+      log(error.event, :error, { message: error.message })
     end
 
     private
 
     attr_reader :logger
 
-    def log_message(event, level, **data)
+    def log_message(event, level, data)
       logger.send(level) do
         { event_identifier: event.identifier, event_description: event.description }.merge(data)
       end
