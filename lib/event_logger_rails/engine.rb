@@ -19,6 +19,7 @@ module EventLoggerRails
         engine.registered_events = Rails.application.config_for(:event_logger_rails)
         engine.logdev = app.config.event_logger_rails.logdev
         engine.logger_class = app.config.event_logger_rails.logger_class
+        engine.sensitive_fields = app.config.filter_parameters
       end
     end
   end

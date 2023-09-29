@@ -21,6 +21,7 @@ module EventLoggerRails
   mattr_accessor :logdev
   mattr_accessor :logger_class
   mattr_accessor :registered_events
+  mattr_accessor :sensitive_fields
 
   def self.setup
     yield self

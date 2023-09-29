@@ -37,6 +37,28 @@ RSpec.describe EventLoggerRails::EventLogger do
     end
     # rubocop:enable RSpec/ExampleLength
 
+    context 'when sensitive data is provided' do
+      let(:data) { { password: 'foobar' } }
+      let(:filtered_data) { { password: '[FILTERED]' } }
+
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the default severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          environment: 'test',
+          event_description: event.description,
+          event_identifier: event.identifier,
+          host: anything,
+          level: 'WARN',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
+          **filtered_data
+        )
+      end
+      # rubocop:enable RSpec/ExampleLength
+    end
+
     context 'when an identifier is provided instead of an EventLoggerRails::Event object' do
       let(:event) { 'event_logger_rails.event.testing' }
 
