@@ -10,3 +10,4 @@ detectors:
   UtilityFunction:
     exclude:
       - EventLoggerRails::Extensions::Loggable#details_for_trace
+      - EventLoggerRails::EventLogger#structured_output
