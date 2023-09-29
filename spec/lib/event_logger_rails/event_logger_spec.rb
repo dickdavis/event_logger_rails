@@ -25,13 +25,14 @@ RSpec.describe EventLoggerRails::EventLogger do
       method_call
       log_output = JSON.parse(buffer.string, symbolize_names: true)
       expect(log_output).to include(
-        message: include(
-          event_description: event.description,
-          event_identifier: event.identifier,
-          **data
-        ),
-        severity: 'WARN',
-        timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+        environment: 'test',
+        event_description: event.description,
+        event_identifier: event.identifier,
+        host: anything,
+        level: 'WARN',
+        service_name: 'Dummy',
+        timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
+        **data
       )
     end
     # rubocop:enable RSpec/ExampleLength
@@ -44,13 +45,14 @@ RSpec.describe EventLoggerRails::EventLogger do
         method_call
         log_output = JSON.parse(buffer.string, symbolize_names: true)
         expect(log_output).to include(
-          message: include(
-            event_description: 'Event reserved for testing.',
-            event_identifier: 'event_logger_rails.event.testing',
-            **data
-          ),
-          severity: 'WARN',
-          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+          environment: 'test',
+          event_description: 'Event reserved for testing.',
+          event_identifier: 'event_logger_rails.event.testing',
+          host: anything,
+          level: 'WARN',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
+          **data
         )
       end
       # rubocop:enable RSpec/ExampleLength
@@ -64,13 +66,14 @@ RSpec.describe EventLoggerRails::EventLogger do
         method_call
         log_output = JSON.parse(buffer.string, symbolize_names: true)
         expect(log_output).to include(
-          message: include(
-            event_description: 'Indicates provided event was unregistered.',
-            event_identifier: 'event_logger_rails.event.unregistered',
-            message: 'Event provided not registered: foo.bar'
-          ),
-          severity: 'ERROR',
-          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+          environment: 'test',
+          event_description: 'Indicates provided event was unregistered.',
+          event_identifier: 'event_logger_rails.event.unregistered',
+          host: anything,
+          level: 'ERROR',
+          message: 'Event provided not registered: foo.bar',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
       end
       # rubocop:enable RSpec/ExampleLength
@@ -84,13 +87,13 @@ RSpec.describe EventLoggerRails::EventLogger do
         method_call
         log_output = JSON.parse(buffer.string, symbolize_names: true)
         expect(log_output).to include(
-          message: include(
-            event_description: event.description,
-            event_identifier: event.identifier,
-            **data
-          ),
-          severity: 'INFO',
-          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+          environment: 'test',
+          event_description: event.description,
+          event_identifier: event.identifier,
+          host: anything,
+          level: 'INFO',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
       end
       # rubocop:enable RSpec/ExampleLength
@@ -104,13 +107,14 @@ RSpec.describe EventLoggerRails::EventLogger do
         method_call
         log_output = JSON.parse(buffer.string, symbolize_names: true)
         expect(log_output).to include(
-          message: include(
-            event_description: 'Indicates provided level was invalid.',
-            event_identifier: 'event_logger_rails.logger_level.invalid',
-            message: "Invalid logger level provided: 'foo'. Valid levels: :debug, :info, :warn, :error, :unknown."
-          ),
-          severity: 'ERROR',
-          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+          environment: 'test',
+          event_description: 'Indicates provided level was invalid.',
+          event_identifier: 'event_logger_rails.logger_level.invalid',
+          host: anything,
+          level: 'ERROR',
+          message: "Invalid logger level provided: 'foo'. Valid levels: :debug, :info, :warn, :error, :unknown.",
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
       end
       # rubocop:enable RSpec/ExampleLength
@@ -119,18 +123,21 @@ RSpec.describe EventLoggerRails::EventLogger do
     context 'when data is not provided' do
       subject(:method_call) { event_logger.log(event, level) }
 
+      # rubocop:disable RSpec/ExampleLength
       it 'logs the default severity, timestamp, event identifier, and description' do
         method_call
         log_output = JSON.parse(buffer.string, symbolize_names: true)
         expect(log_output).to include(
-          message: include(
-            event_description: event.description,
-            event_identifier: event.identifier
-          ),
-          severity: 'WARN',
-          timestamp: match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [-+]\d{4}/)
+          environment: 'test',
+          event_description: event.description,
+          event_identifier: event.identifier,
+          host: anything,
+          level: 'WARN',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
       end
+      # rubocop:enable RSpec/ExampleLength
     end
   end
 end
