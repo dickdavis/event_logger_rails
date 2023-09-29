@@ -10,8 +10,8 @@ module EventLoggerRails
   class EventLogger
     def initialize(logdev:, logger_class:)
       @logger = logger_class.new(logdev)
-      @logger.formatter = proc do |severity, datetime, _progname, message|
-        "#{JSON.dump(severity:, timestamp: datetime.to_s, message:)}\n"
+      @logger.formatter = proc do |level, timestamp, _progname, message|
+        "#{JSON.dump(structured_output(level:, timestamp:, message:))}\n"
       end
     end
 
@@ -35,6 +35,17 @@ module EventLoggerRails
       end
     rescue NoMethodError
       raise EventLoggerRails::Exceptions::InvalidLoggerLevel.new(logger_level: level)
+    end
+
+    def structured_output(level:, timestamp:, message:)
+      {
+        host: Socket.gethostname,
+        environment: Rails.env,
+        service_name: Rails.application.class.module_parent_name,
+        level:,
+        timestamp: timestamp.iso8601(3),
+        **message
+      }
     end
   end
 end
