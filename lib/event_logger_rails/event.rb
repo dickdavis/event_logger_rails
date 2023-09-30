@@ -28,6 +28,13 @@ module EventLoggerRails
       identifier.present?
     end
 
+    def to_h
+      {
+        event_identifier: identifier,
+        event_description: description
+      }
+    end
+
     def to_s
       identifier&.to_s || provided_identifier.to_s
     end

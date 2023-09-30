@@ -14,6 +14,10 @@ module EventLoggerRails
     config.event_logger_rails.logdev = "log/event_logger_rails.#{Rails.env}.log"
     config.event_logger_rails.logger_class = Logger
 
+    initializer 'event_logger_rails.add_middleware' do |app|
+      app.middleware.use EventLoggerRails::Middleware::CaptureRequestDetails
+    end
+
     config.after_initialize do |app|
       EventLoggerRails.setup do |engine|
         engine.registered_events = Rails.application.config_for(:event_logger_rails)
