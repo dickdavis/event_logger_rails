@@ -1,7 +1,25 @@
-# EventLoggerRails
+# `EventLoggerRails`
 
-`EventLoggerRails` is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
-It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.
+🎉 **Welcome to EventLoggerRails: Your Event Logging Sidekick!** 🎉
+
+Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine that turns your logs into a treasure trove of insights! 🌟
+
+## Picture This
+
+With a straightforward and centralized config file, you can easily define all the events that make your business tick. Then watch as `EventLoggerRails` transforms these events into dazzling JSON logs! 🎇
+
+## But Wait, There's More!
+
+Seamlessly funnel these JSON marvels into analytics platforms like OpenSearch, and behold the magic of data visualization and real-time analysis. 📊✨
+
+## Why Choose `EventLoggerRails`?
+
+- 🚀 **Fast Setup**: Get your logging up and running in minutes, not hours!
+- 🌐 **Team-Friendly Event Registry**: Simplify how your team defines and logs business-critical events.
+- 📚 **Readable**: Logs in a clean, JSON-formatted structure for easy parsing and analysis.
+- 🔍 **In-Depth Insight**: Elevate your business process analysis with granular, structured logging.
+
+Don't let crucial events get lost in the digital void. Make your app's logging as unforgettable as your first journey into the Wired with `EventLoggerRails`!
 
 ## Usage
 
@@ -44,27 +62,28 @@ In this example, a possible successful signup could be structured like this:
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "2b8f44c1-0e42-4a5f-84b8-52659990d138",
   "service_name": "DummyApp",
   "level": "WARN",
-  "timestamp": "2023-09-29T23:23:16.633+00:00",
-  "event_identifier": "user.signup.success",
-  "event_description": "Indicates a user signup was successful.",
-  "email": "testtesttest@test.com",
-  "action": "create",
-  "controller": "Registrations",
-  "format": "application/x-www-form-urlencoded;charset=UTF-8",
   "method": "POST",
   "parameters": {
     "authenticity_token": "[FILTERED]",
     "user": {
-      "email": "testtesttest@test.com",
+      "email": "princess@leia.com",
       "password": "[FILTERED]"
     }
   },
   "path": "/users",
-  "remote_ip": "172.20.0.1"
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T06:47:16.938+00:00",
+  "event_identifier": "user.signup.success",
+  "event_description": "Indicates a user signup was successful.",
+  "email": "princess@leia.com",
+  "action": "create",
+  "controller": "Registrations"
 }
 ```
 
@@ -72,20 +91,12 @@ In this example, a possible successful signup could be structured like this:
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "2b8f44c1-0e42-4a5f-84b8-52656690d138",
   "service_name": "DummyApp",
   "level": "WARN",
-  "timestamp": "2023-09-29T23:01:17.554+00:00",
-  "event_identifier": "user.signup.failure",
-  "event_description": "Indicates a user signup was not successful.",
-  "errors": [
-    "Email can't be blank",
-    "Password can't be blank"
-  ],
-  "action": "create",
-  "controller": "Registrations",
-  "format": "application/x-www-form-urlencoded;charset=UTF-8",
   "method": "POST",
   "parameters": {
     "authenticity_token": "[FILTERED]",
@@ -95,7 +106,17 @@ In this example, a possible successful signup could be structured like this:
     },
   },
   "path": "/users",
-  "remote_ip": "172.20.0.1"
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T06:47:16.928+00:00",
+  "event_identifier": "user.signup.failure",
+  "event_description": "Indicates a user signup was not successful.",
+  "errors": [
+    "Email can't be blank",
+    "Password can't be blank"
+  ],
+  "email": "princess@leia.com",
+  "action": "create",
+  "controller": "Registrations"
 }
 ```
 
@@ -111,20 +132,12 @@ This will output an event with the corresponding severity level. You must provid
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "2b8f44c1-0e42-4a5f-84b8-52656690d138",
   "service_name": "DummyApp",
   "level": "ERROR",
-  "timestamp": "2023-09-29T23:01:17.554+00:00",
-  "event_identifier": "user.signup.failure",
-  "event_description": "Indicates a user signup was not successful.",
-  "errors": [
-    "Email can't be blank",
-    "Password can't be blank"
-  ],
-  "action": "create",
-  "controller": "Registrations",
-  "format": "application/x-www-form-urlencoded;charset=UTF-8",
   "method": "POST",
   "parameters": {
     "authenticity_token": "[FILTERED]",
@@ -134,7 +147,17 @@ This will output an event with the corresponding severity level. You must provid
     },
   },
   "path": "/users",
-  "remote_ip": "172.20.0.1"
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T06:47:16.928+00:00",
+  "event_identifier": "user.signup.failure",
+  "event_description": "Indicates a user signup was not successful.",
+  "errors": [
+    "Email can't be blank",
+    "Password can't be blank"
+  ],
+  "email": "princess@leia.com",
+  "action": "create",
+  "controller": "Registrations"
 }
 ```
 
@@ -160,16 +183,28 @@ By default, `event_logger_rails` will include the model name and instance ID, al
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "2b8f44c1-0e42-4a5f-84b8-52652332d138",
   "service_name": "DummyApp",
   "level": "WARN",
-  "timestamp": "2023-09-30T00:51:51.315+00:00",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "princess@leia.com",
+      "password": "[FILTERED]"
+    }
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T06:47:16.817+00:00",
   "event_identifier": "user.signup.success",
   "event_description": "Indicates a user signup was successful.",
-  "email": "test_user_42@example.com",
+  "email": "princess@leia.com",
   "model": "User",
-  "instance_id": 38
+  "instance_id": 41
 }
 ```
 
@@ -191,11 +226,23 @@ If you fail to register an event, the logger will emit an `event_logger_rails.ev
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "94c5ffe9-1bd8-4e04-88a3-478958e242b0",
   "service_name": "DummyApp",
   "level": "ERROR",
-  "timestamp": "2023-09-29T23:27:53.714+00:00",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "",
+      "password": "[FILTERED]"
+    }
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T07:03:34.993+00:00",
   "event_identifier": "event_logger_rails.event.unregistered",
   "event_description": "Indicates provided event was unregistered.",
   "message": "Event provided not registered: foo.bar"
@@ -206,11 +253,23 @@ If you provide an invalid log level, the logger will emit an `event_logger_rails
 
 ```json
 {
-  "host": "d6aeb6b0516c",
   "environment": "development",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "host": "d6aeb6b0516c",
+  "id": "11541423-0008-4cc7-aef7-1e4af9a801d7",
   "service_name": "DummyApp",
   "level": "ERROR",
-  "timestamp": "2023-09-29T23:30:29.761+00:00",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "",
+      "password": "[FILTERED]"
+    }
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1",
+  "timestamp": "2023-09-30T07:04:52.623+00:00",
   "event_identifier": "event_logger_rails.logger_level.invalid",
   "event_description": "Indicates provided level was invalid.",
   "message": "Invalid logger level provided: 'foobar'. Valid levels: :debug, :info, :warn, :error, :unknown."
