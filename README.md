@@ -46,7 +46,7 @@ In this example, a possible successful signup could be structured like this:
 {
   "host": "d6aeb6b0516c",
   "environment": "development",
-  "service_name": "Kutima",
+  "service_name": "DummyApp",
   "level": "WARN",
   "timestamp": "2023-09-29T23:23:16.633+00:00",
   "event_identifier": "user.signup.success",
