@@ -75,6 +75,14 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
+  describe '#to_h' do
+    subject(:method_call) { event.to_h }
+
+    let(:identifier) { 'foo.bar' }
+
+    it { is_expected.to eq({ event_identifier: event.identifier, event_description: event.description }) }
+  end
+
   describe '#to_s' do
     subject(:method_call) { event.to_s }
 

@@ -30,10 +30,13 @@ module EventLoggerRails
 
     attr_reader :logger
 
+    def sanitizer
+      @sanitizer ||= ActiveSupport::ParameterFilter.new(EventLoggerRails.sensitive_fields)
+    end
+
     def log_message(event, level, data)
       logger.send(level) do
-        filtered_data = ActiveSupport::ParameterFilter.new(EventLoggerRails.sensitive_fields).filter(data)
-        { event_identifier: event.identifier, event_description: event.description }.merge(filtered_data)
+        event.to_h.merge(sanitizer.filter(data))
       end
     rescue NoMethodError
       raise EventLoggerRails::Exceptions::InvalidLoggerLevel.new(logger_level: level)
@@ -49,7 +52,7 @@ module EventLoggerRails
         service_name: Rails.application.class.module_parent_name,
         level:,
         method: EventLoggerRails::CurrentRequest.method,
-        parameters: EventLoggerRails::CurrentRequest.parameters,
+        parameters: sanitizer.filter(EventLoggerRails::CurrentRequest.parameters),
         path: EventLoggerRails::CurrentRequest.path,
         remote_ip: EventLoggerRails::CurrentRequest.remote_ip,
         timestamp: timestamp.iso8601(3),
@@ -57,5 +60,12 @@ module EventLoggerRails
       }
     end
     # rubocop:enable Metrics/MethodLength
+
+    def event_data(event)
+      {
+        event_identifier: event.identifier,
+        event_description: event.description
+      }
+    end
   end
 end
