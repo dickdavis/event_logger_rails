@@ -20,12 +20,12 @@ registered_events:
 
 ### Logging in Controllers
 
-Continuing this example, we'll want to log the events we registered. To do so, include the `EventLoggerRails::Loggable` concern in the controller that
+Continuing this example, we'll want to log the events we registered. To do so, include the `EventLoggerRails::LoggableController` concern in the controller that
 processes user signup's and call the `log_event` method to log details about the event:
 
 ```ruby
 class UsersController < ApplicationController
-  include EventLoggerRails::Loggable
+  include EventLoggerRails::LoggableController
 
   def create
     user = User.new(user_params)
