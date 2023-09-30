@@ -33,9 +33,9 @@ class UsersController < ApplicationController
       log_event 'user.signup.success'
       redirect_to dashboard_path
     else
-      log_event 'user.signup.failure', errors: user.errors
+      log_event 'user.signup.failure', data: { errors: user.errors.full_messages  }
       render :new
-     end
+    end
   end
 end
 ```
@@ -44,23 +44,27 @@ In this example, a possible successful signup could be structured like this:
 
 ```json
 {
-    "message": {
-        "event_description": "Indicates a user signup was successful.",
-        "event_identifier": "user.signup.success",
-        "controller": "Users",
-        "action": "create",
-        "method": "POST",
-        "path": "/users",
-        "remote_ip": "::1",
-        "parameters": {
-            "user": {
-                "first_name": "Test",
-                "last_name": "User"
-            }
-        }
-    },
-    "severity": "WARN",
-    "timestamp": "2023-09-23 22:27:33 -0500"
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "Kutima",
+  "level": "WARN",
+  "timestamp": "2023-09-29T23:23:16.633+00:00",
+  "event_identifier": "user.signup.success",
+  "event_description": "Indicates a user signup was successful.",
+  "email": "testtesttest@test.com",
+  "action": "create",
+  "controller": "Registrations",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "testtesttest@test.com",
+      "password": "[FILTERED]"
+    }
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1"
 }
 ```
 
@@ -68,69 +72,114 @@ In this example, a possible successful signup could be structured like this:
 
 ```json
 {
-    "message": {
-        "event_description": "Indicates a user signup was not successful.",
-        "event_identifier": "user.signup.failure",
-        "controller": "Users",
-        "action": "create",
-        "method": "POST",
-        "path": "/users",
-        "remote_ip": "::1",
-        "parameters": {
-            "user": {
-                "first_name": "Test",
-                "last_name": "User"
-            }
-        },
-        "errors": {
-            "email": "is missing"
-        }
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "DummyApp",
+  "level": "WARN",
+  "timestamp": "2023-09-29T23:01:17.554+00:00",
+  "event_identifier": "user.signup.failure",
+  "event_description": "Indicates a user signup was not successful.",
+  "errors": [
+    "Email can't be blank",
+    "Password can't be blank"
+  ],
+  "action": "create",
+  "controller": "Registrations",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "",
+      "password": "[FILTERED]"
     },
-    "severity": "WARN",
-    "timestamp": "2023-09-23 22:27:33 -0500"
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1"
 }
 ```
+
+Note how the log entry from the previous example contains the data passed in via the optional `data` argument.
 
 You can also provide a logger level as an optional argument if you need to specify a logger level other than the default:
 
 ```ruby
-log_event 'user.signup.failure', :error, errors: user.errors
+log_event 'user.signup.failure', level: :error, data: { errors: user.errors }
 ```
 
 This will output an event with the corresponding severity level. You must provide a valid logger level (`:debug, :info, :warn, :error, or :unknown`).
 
 ```json
 {
-    "message": {
-        "event_description": "Indicates a user signup was not successful.",
-        "event_identifier": "user.signup.failure",
-        "controller": "Users",
-        "action": "create",
-        "method": "POST",
-        "path": "/users",
-        "remote_ip": "::1",
-        "parameters": {
-            "user": {
-                "first_name": "Test",
-                "last_name": "User"
-            }
-        },
-        "errors": {
-            "email": "is missing"
-        }
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "DummyApp",
+  "level": "ERROR",
+  "timestamp": "2023-09-29T23:01:17.554+00:00",
+  "event_identifier": "user.signup.failure",
+  "event_description": "Indicates a user signup was not successful.",
+  "errors": [
+    "Email can't be blank",
+    "Password can't be blank"
+  ],
+  "action": "create",
+  "controller": "Registrations",
+  "format": "application/x-www-form-urlencoded;charset=UTF-8",
+  "method": "POST",
+  "parameters": {
+    "authenticity_token": "[FILTERED]",
+    "user": {
+      "email": "",
+      "password": "[FILTERED]"
     },
-    "severity": "ERROR",
-    "timestamp": "2023-09-23 22:27:33 -0500"
+  },
+  "path": "/users",
+  "remote_ip": "172.20.0.1"
 }
 ```
 
-### Logging Outside of Controllers
+### Logging in Models
+
+You can also log events from within models by including the `EventLoggerRails::LoggableModel` concern and calling `log_event`.
+
+```ruby
+class User < ApplicationRecord
+  include EventLoggerRails::LoggableModel
+
+  after_create :log_signup
+
+  private
+
+  def log_signup
+    log_event 'user.signup.success', data: { email: }
+  end
+end
+```
+
+By default, `event_logger_rails` will include the model name and instance ID, along with whatever data is passed.
+
+```json
+{
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "DummyApp",
+  "level": "WARN",
+  "timestamp": "2023-09-30T00:51:51.315+00:00",
+  "event_identifier": "user.signup.success",
+  "event_description": "Indicates a user signup was successful.",
+  "email": "test_user_42@example.com",
+  "model": "User",
+  "instance_id": 38
+}
+```
+
+### Logging Everywhere Else
 
 You can log events from anywhere inside of your application by calling `EventLoggerRails.log` directly, though you won't get the additional context
 from the request.
 
 ```ruby
-EventLoggerRails.log 'user.signup.success', :info, user_id: @user.id
+EventLoggerRails.log 'user.signup.success', :info, { user_id: @user.id }
 ```
 
 ### Errors
@@ -142,12 +191,14 @@ If you fail to register an event, the logger will emit an `event_logger_rails.ev
 
 ```json
 {
-    "message": {
-        "event_description": "event_logger_rails.event.unregistered",
-        "event_identifier": "Indicates provided event was unregistered."
-    },
-    "severity": "ERROR",
-    "timestamp": "2023-09-23 22:27:33 -0500"
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "DummyApp",
+  "level": "ERROR",
+  "timestamp": "2023-09-29T23:27:53.714+00:00",
+  "event_identifier": "event_logger_rails.event.unregistered",
+  "event_description": "Indicates provided event was unregistered.",
+  "message": "Event provided not registered: foo.bar"
 }
 ```
 
@@ -155,12 +206,14 @@ If you provide an invalid log level, the logger will emit an `event_logger_rails
 
 ```json
 {
-    "message": {
-        "event_description": "event_logger_rails.logger_level.invalid",
-        "event_identifier": "Indicates provided level was invalid."
-    },
-    "severity": "ERROR",
-    "timestamp": "2023-09-23 22:27:33 -0500"
+  "host": "d6aeb6b0516c",
+  "environment": "development",
+  "service_name": "DummyApp",
+  "level": "ERROR",
+  "timestamp": "2023-09-29T23:30:29.761+00:00",
+  "event_identifier": "event_logger_rails.logger_level.invalid",
+  "event_description": "Indicates provided level was invalid.",
+  "message": "Invalid logger level provided: 'foobar'. Valid levels: :debug, :info, :warn, :error, :unknown."
 }
 ```
 
@@ -175,32 +228,31 @@ gem 'event_logger_rails'
 And then execute:
 
 ```bash
-$ bundle
+bundle
 ```
 
 Or install it yourself as:
 
 ```bash
-$ gem install event_logger_rails
+gem install event_logger_rails
 ```
 
-Run the install generator to create a config file (`config/event_logger_rails.yml`) and example initializer:
+Run the install generator to create a config file (`config/event_logger_rails.yml`):
 
 ```bash
-$ bin/rails generate event_logger_rails:install
+bin/rails generate event_logger_rails:install
 ```
 
 Add your events to the generated config file following the structure of the examples.
 
-You may opt to load in registered events in `config/application.rb` using the `config_for` helper provided by Rails.
+By default, `event_logger_rails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
+you to ingest these logs independently. If you wish to set an alternative log device to capture output , you can configure it in `config/application.rb`:
 
 ```ruby
-EventLoggerRails.setup do |config|
-  config.registered_events = config_for[:registered_events]
+Rails.application.configure do |config|
+  config.event_logger_rails.logdev = 'path/to/log.file'
 end
 ```
-
-Doing so eliminates the need for the generated initializer, so you should delete it if you choose to go this route.
 
 ## Contributing
 
@@ -209,3 +261,4 @@ Contributions are welcome. Feel free to open a PR.
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
