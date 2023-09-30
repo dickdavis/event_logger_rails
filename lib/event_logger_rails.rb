@@ -2,13 +2,15 @@
 
 require 'rails'
 require 'active_support/dependencies'
-require 'event_logger_rails/version'
 require 'event_logger_rails/engine'
-require 'event_logger_rails/event_logger'
+require 'event_logger_rails/current_request'
 require 'event_logger_rails/event'
+require 'event_logger_rails/event_logger'
 require 'event_logger_rails/exceptions/invalid_logger_level'
 require 'event_logger_rails/exceptions/unregistered_event'
 require 'event_logger_rails/extensions/loggable'
+require 'event_logger_rails/middleware/capture_request_details'
+require 'event_logger_rails/version'
 
 ##
 # Namespace for EventLoggerRails gem
@@ -17,6 +19,8 @@ module EventLoggerRails
   autoload :Event, 'event_logger_rails/event'
   autoload :InvalidLoggerLevel, 'event_logger_rails/exceptions/invalid_logger_level'
   autoload :UnregisteredEvent, 'event_logger_rails/exceptions/unregistered_event'
+  autoload :CurrentRequest, 'event_logger_rails/current_request'
+  autoload :CaptureRequestDetails, 'event_logger_rails/middleware/capture_request_details'
 
   mattr_accessor :logdev
   mattr_accessor :logger_class

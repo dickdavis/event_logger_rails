@@ -25,16 +25,10 @@ end
 
 RSpec.describe EventLoggerRails::LoggableController, type: :request do
   let(:params) { { 'foo' => 'bar' } }
-  let(:headers) { { 'Content-Type' => 'text/html' } }
   let(:data_from_request) do
     {
       action: controller.action_name,
-      controller: controller.controller_name.camelcase,
-      format: 'text/html',
-      method: request.method,
-      parameters: request.params.except(:controller, :action, :format),
-      path: request.path,
-      remote_ip: request.remote_ip
+      controller: controller.controller_name.camelcase
     }
   end
 
@@ -55,7 +49,7 @@ RSpec.describe EventLoggerRails::LoggableController, type: :request do
   end
 
   it 'calls the event logger with data from the request' do
-    get(test_one_path, params:, headers:)
+    get(test_one_path, params:)
     expect(logger_spy)
       .to have_received(:log)
       .with(

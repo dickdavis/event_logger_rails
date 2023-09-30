@@ -18,6 +18,12 @@ RSpec.describe EventLoggerRails::EventLogger do
 
     before do
       allow(IO).to receive(:open).and_return(buffer)
+      EventLoggerRails::CurrentRequest.id = '1234'
+      EventLoggerRails::CurrentRequest.format = 'text/html'
+      EventLoggerRails::CurrentRequest.method = 'GET'
+      EventLoggerRails::CurrentRequest.parameters = { foo: 'bar' }
+      EventLoggerRails::CurrentRequest.path = '/'
+      EventLoggerRails::CurrentRequest.remote_ip = '10.1.1.1'
     end
 
     # rubocop:disable RSpec/ExampleLength
@@ -28,8 +34,14 @@ RSpec.describe EventLoggerRails::EventLogger do
         environment: 'test',
         event_description: event.description,
         event_identifier: event.identifier,
+        format: 'text/html',
         host: anything,
+        id: '1234',
         level: 'WARN',
+        method: 'GET',
+        parameters: { foo: 'bar' },
+        path: '/',
+        remote_ip: '10.1.1.1',
         service_name: 'Dummy',
         timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
         **data
@@ -49,8 +61,14 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: event.description,
           event_identifier: event.identifier,
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'WARN',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
           **filtered_data
@@ -70,8 +88,14 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: 'Event reserved for testing.',
           event_identifier: 'event_logger_rails.event.testing',
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'WARN',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/),
           **data
@@ -91,9 +115,14 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: 'Indicates provided event was unregistered.',
           event_identifier: 'event_logger_rails.event.unregistered',
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'ERROR',
-          message: 'Event provided not registered: foo.bar',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
@@ -112,8 +141,14 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: event.description,
           event_identifier: event.identifier,
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'INFO',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
@@ -132,9 +167,15 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: 'Indicates provided level was invalid.',
           event_identifier: 'event_logger_rails.logger_level.invalid',
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'ERROR',
           message: "Invalid logger level provided: 'foo'. Valid levels: :debug, :info, :warn, :error, :unknown.",
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
@@ -153,8 +194,14 @@ RSpec.describe EventLoggerRails::EventLogger do
           environment: 'test',
           event_description: event.description,
           event_identifier: event.identifier,
+          format: 'text/html',
           host: anything,
+          id: '1234',
           level: 'WARN',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
           service_name: 'Dummy',
           timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
         )
