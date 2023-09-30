@@ -1,4 +1,6 @@
-# 🔌 EventLoggerRails 💾
+## 🔌 EventLoggerRails 💾
+
+![Elrika in the Wired](elrika-in-the-wired.png?raw=true)
 
 Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into cryptic gems of understanding. 💎
 
@@ -177,7 +179,7 @@ class User < ApplicationRecord
 end
 ```
 
-By default, `event_logger_rails` will include the model name, instance ID, and whatever data is passed.
+By default, `EventLoggerRails` will include the model name, instance ID, and whatever data is passed.
 
 ```json
 {
@@ -302,7 +304,7 @@ bin/rails generate event_logger_rails:install
 
 Add your events to the generated config file following the structure of the examples.
 
-By default, `event_logger_rails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
+By default, `EventLoggerRails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
 you to ingest these logs independently. If you wish to set an alternative log device to capture output, you can configure it in `config/application.rb`:
 
 ```ruby
