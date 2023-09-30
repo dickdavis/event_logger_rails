@@ -1,6 +1,6 @@
 ## 🔌 EventLoggerRails 💾
 
-![EventLoggerRails Logo](./elrika-in-the-wired.png)
+![EventLoggerRails Logo](./elrika-in-the-wired.png?raw=true)
 
 Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into cryptic gems of understanding. 💎
 
