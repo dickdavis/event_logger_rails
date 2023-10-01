@@ -11,6 +11,7 @@ require 'event_logger_rails/exceptions/invalid_logger_level'
 require 'event_logger_rails/exceptions/unregistered_event'
 require 'event_logger_rails/extensions/loggable'
 require 'event_logger_rails/middleware/capture_request_details'
+require 'event_logger_rails/output'
 require 'event_logger_rails/version'
 
 ##
