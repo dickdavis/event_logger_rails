@@ -92,6 +92,26 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
+  describe '#validate!' do
+    subject(:method_call) { event.validate! { |event| event.inspect } } # rubocop:disable Style/SymbolProc
+
+    context 'when event is not valid' do
+      let(:identifier) { 'foobar' }
+
+      it 'raises an exception' do
+        expect { method_call }.to raise_error(EventLoggerRails::Exceptions::UnregisteredEvent)
+      end
+    end
+
+    context 'when event is valid' do
+      let(:identifier) { 'foo.bar' }
+
+      it 'yields self to the block' do
+        expect { |block| event.validate!(&block) }.to yield_with_args(event)
+      end
+    end
+  end
+
   describe '#to_hash' do
     subject(:method_call) { event.to_hash }
 
