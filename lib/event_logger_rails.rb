@@ -16,14 +16,14 @@ require 'event_logger_rails/version'
 ##
 # Namespace for EventLoggerRails gem
 module EventLoggerRails
+  autoload :CaptureRequestDetails, 'event_logger_rails/middleware/capture_request_details'
+  autoload :CurrentRequest, 'event_logger_rails/current_request'
+  autoload :Event, 'event_logger_rails/event'
   autoload :EventLogger, 'event_logger_rails/event_logger'
-  autoload :EventMessage, 'event_logger_rails/event_message'
   autoload :InvalidLoggerLevel, 'event_logger_rails/exceptions/invalid_logger_level'
   autoload :JsonLogger, 'event_logger_rails/json_logger'
   autoload :Output, 'event_logger_rails/output'
   autoload :UnregisteredEvent, 'event_logger_rails/exceptions/unregistered_event'
-  autoload :CurrentRequest, 'event_logger_rails/current_request'
-  autoload :CaptureRequestDetails, 'event_logger_rails/middleware/capture_request_details'
 
   mattr_accessor :logdev
   mattr_accessor :logger_class
