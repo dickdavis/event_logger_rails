@@ -24,11 +24,15 @@ module EventLoggerRails
                                   end
     end
 
+    def merge(...)
+      to_hash.merge(...)
+    end
+
     def valid?
       identifier.present?
     end
 
-    def to_h
+    def to_hash
       {
         event_identifier: identifier,
         event_description: description

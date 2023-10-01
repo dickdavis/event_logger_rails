@@ -39,6 +39,23 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
+  describe '#merge' do
+    subject(:method_call) { event.merge(data) }
+
+    let(:identifier) { 'foo.bar' }
+    let(:data) { { test: 'data' } }
+
+    it 'merges the hash representation of the event with the provided data' do
+      expect(method_call).to eq(
+        {
+          event_identifier: event.identifier,
+          event_description: event.description,
+          **data
+        }
+      )
+    end
+  end
+
   describe '#valid?' do
     subject(:method_call) { event.valid? }
 
@@ -75,8 +92,8 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
-  describe '#to_h' do
-    subject(:method_call) { event.to_h }
+  describe '#to_hash' do
+    subject(:method_call) { event.to_hash }
 
     let(:identifier) { 'foo.bar' }
 
