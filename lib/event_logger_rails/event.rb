@@ -33,7 +33,7 @@ module EventLoggerRails
     end
 
     def validate!
-      raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: self) unless valid?
+      raise Exceptions::UnregisteredEvent.new(unregistered_event: self) unless valid?
 
       yield(self)
     end
