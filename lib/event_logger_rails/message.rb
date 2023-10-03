@@ -3,7 +3,7 @@
 module EventLoggerRails
   ##
   # Models a message sent to the logger containing event and optional data
-  class EventMessage
+  class Message
     def initialize(event:, data: {})
       @event = event
       @data = data
