@@ -10,7 +10,7 @@ module EventLoggerRails
 
     def log(event, level, data = {})
       Event.new(event).validate! do |validated_event|
-        message = EventMessage.new(event: validated_event, data:)
+        message = Message.new(event: validated_event, data:)
         log_message(message, level)
       end
     rescue EventLoggerRails::Exceptions::UnregisteredEvent,

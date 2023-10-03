@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe EventLoggerRails::EventMessage do
-  subject(:event_message) { described_class.new(**options) }
+RSpec.describe EventLoggerRails::Message do
+  subject(:message) { described_class.new(**options) }
 
   let(:options) { { event:, data: try(:data) }.compact }
 
   describe '#to_hash' do
-    subject(:method_call) { event_message.to_hash }
+    subject(:method_call) { message.to_hash }
 
     context 'when provided a valid event' do
       let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
