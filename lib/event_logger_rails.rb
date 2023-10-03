@@ -10,6 +10,7 @@ require 'event_logger_rails/event_message'
 require 'event_logger_rails/exceptions/invalid_logger_level'
 require 'event_logger_rails/exceptions/unregistered_event'
 require 'event_logger_rails/extensions/loggable'
+require 'event_logger_rails/json_logger'
 require 'event_logger_rails/middleware/capture_request_details'
 require 'event_logger_rails/output'
 require 'event_logger_rails/version'
@@ -27,7 +28,6 @@ module EventLoggerRails
   autoload :UnregisteredEvent, 'event_logger_rails/exceptions/unregistered_event'
 
   mattr_accessor :logdev
-  mattr_accessor :logger_class
   mattr_accessor :registered_events
   mattr_accessor :sensitive_fields
 
@@ -36,7 +36,7 @@ module EventLoggerRails
   end
 
   def self.event_logger
-    @event_logger ||= EventLogger.new(logdev:, logger_class:)
+    @event_logger ||= EventLogger.new(logdev:)
   end
 
   def self.log(...)

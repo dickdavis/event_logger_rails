@@ -4,12 +4,8 @@ module EventLoggerRails
   ##
   # Outputs event and related data logs.
   class EventLogger
-    def initialize(logdev:, logger_class:)
-      @logger = logger_class.new(logdev)
-      @logger.formatter = proc do |level, timestamp, _progname, message|
-        output = Output.new(level:, timestamp:, message:)
-        "#{output.to_json}\n"
-      end
+    def initialize(logdev:)
+      @logger = JsonLogger.new(logdev)
     end
 
     def log(event, level, data = {})

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe EventLoggerRails::EventLogger do
   subject(:event_logger) do
-    described_class.new(logdev: File.open(File::NULL, 'w'), logger_class: Logger)
+    described_class.new(logdev: File.open(File::NULL, 'w'))
   end
 
   describe '#log' do
