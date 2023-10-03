@@ -16,16 +16,16 @@ module EventLoggerRails
         begin
           request = ActionDispatch::Request.new(env)
 
-          EventLoggerRails::CurrentRequest.id = env['action_dispatch.request_id']
-          EventLoggerRails::CurrentRequest.format = request.headers['Content-Type']
-          EventLoggerRails::CurrentRequest.method = request.method
-          EventLoggerRails::CurrentRequest.parameters = request.parameters.except(:controller, :action, :format)
-          EventLoggerRails::CurrentRequest.path = request.path
-          EventLoggerRails::CurrentRequest.remote_ip = request.remote_ip
+          CurrentRequest.id = env['action_dispatch.request_id']
+          CurrentRequest.format = request.headers['Content-Type']
+          CurrentRequest.method = request.method
+          CurrentRequest.parameters = request.parameters.except(:controller, :action, :format)
+          CurrentRequest.path = request.path
+          CurrentRequest.remote_ip = request.remote_ip
 
           status, headers, body = @app.call(env)
         ensure
-          EventLoggerRails::CurrentRequest.reset
+          CurrentRequest.reset
         end
 
         [status, headers, body]
