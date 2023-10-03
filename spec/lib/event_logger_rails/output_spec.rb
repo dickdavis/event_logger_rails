@@ -65,6 +65,7 @@ RSpec.describe EventLoggerRails::Output do
           )
         end
 
+        # rubocop:disable RSpec/NestedGroups
         context 'when sensitive data is provided in the message hash' do
           let(:message) { { password: 'foobar' } }
           let(:filtered_message) { { password: '[FILTERED]' } }
@@ -80,6 +81,7 @@ RSpec.describe EventLoggerRails::Output do
             )
           end
         end
+        # rubocop:enable RSpec/NestedGroups
       end
 
       context 'when message cannot be coerced to hash' do
@@ -130,6 +132,7 @@ RSpec.describe EventLoggerRails::Output do
         end
         # rubocop:enable RSpec/ExampleLength
 
+        # rubocop:disable RSpec/NestedGroups
         context 'when sensitive data is provided in the message hash' do
           let(:message) { { password: 'foobar' } }
           let(:filtered_message) { { password: '[FILTERED]' } }
@@ -181,6 +184,7 @@ RSpec.describe EventLoggerRails::Output do
           end
           # rubocop:enable RSpec/ExampleLength
         end
+        # rubocop:enable RSpec/NestedGroups
       end
 
       context 'when message cannot be coerced to hash' do
@@ -205,6 +209,7 @@ RSpec.describe EventLoggerRails::Output do
         end
         # rubocop:enable RSpec/ExampleLength
 
+        # rubocop:disable RSpec/NestedGroups
         context 'when sensitive data is provided in the parameters' do
           let(:parameters) { { password: 'foobar' } }
           let(:filtered_parameters) { { password: '[FILTERED]' } }
@@ -232,6 +237,7 @@ RSpec.describe EventLoggerRails::Output do
           end
           # rubocop:enable RSpec/ExampleLength
         end
+        # rubocop:enable RSpec/NestedGroups
       end
     end
   end

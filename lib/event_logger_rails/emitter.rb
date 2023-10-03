@@ -2,8 +2,8 @@
 
 module EventLoggerRails
   ##
-  # Outputs event and related data logs.
-  class EventLogger
+  # Processes events, sending data to logger.
+  class Emitter
     def initialize(logdev:)
       @logger = JsonLogger.new(logdev)
     end

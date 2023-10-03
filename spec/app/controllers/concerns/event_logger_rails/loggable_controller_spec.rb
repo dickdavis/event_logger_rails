@@ -25,17 +25,17 @@ end
 
 RSpec.describe EventLoggerRails::LoggableController, type: :request do
   let(:params) { { 'foo' => 'bar' } }
-  let(:data_from_request) do
+  let(:data_from_controller) do
     {
       action: controller.action_name,
       controller: controller.controller_name.camelcase
     }
   end
 
-  let(:logger_spy) { instance_spy(EventLoggerRails::EventLogger) }
+  let(:emitter_spy) { instance_spy(EventLoggerRails::Emitter) }
 
   before do
-    allow(EventLoggerRails::EventLogger).to receive(:new).and_return(logger_spy)
+    allow(EventLoggerRails::Emitter).to receive(:new).and_return(emitter_spy)
 
     Rails.application.routes.draw do
       get :test_one, to: 'dummy#test_one', as: :test_one
@@ -48,14 +48,14 @@ RSpec.describe EventLoggerRails::LoggableController, type: :request do
     EventLoggerRails.reset
   end
 
-  it 'calls the event logger with data from the request' do
+  it 'calls the emitter with data from the controller' do
     get(test_one_path, params:)
-    expect(logger_spy)
+    expect(emitter_spy)
       .to have_received(:log)
       .with(
         'event_logger_rails.event.testing',
         :warn,
-        hash_including(data_from_request)
+        hash_including(data_from_controller)
       )
   end
 end

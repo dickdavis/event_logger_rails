@@ -35,37 +35,22 @@ RSpec.describe EventLoggerRails do
         expect(described_class.logdev).to eq(logdev)
       end
     end
-
-    describe 'logger_class' do
-      subject(:engine_setup) do
-        engine.setup do |config|
-          config.logger_class = logger_class
-        end
-      end
-
-      let(:logger_class) { Logger }
-
-      it 'configures the class to use for initializing the logger' do
-        engine_setup
-        expect(described_class.logger_class).to eq(logger_class)
-      end
-    end
   end
 
-  describe '.event_logger' do
+  describe '.emitter' do
     before { described_class.reset }
 
-    it 'returns the EventLogger' do
-      expect(engine.event_logger).to be_a(EventLoggerRails::EventLogger)
+    it 'returns the emitter' do
+      expect(engine.emitter).to be_a(EventLoggerRails::Emitter)
     end
   end
 
   describe '.reset' do
     before { described_class.reset }
 
-    it 'sets the event_logger to nil' do
-      engine.event_logger
-      expect { engine.reset }.to change { engine.instance_variable_get(:@event_logger) }.to(nil)
+    it 'sets the emitter to nil' do
+      engine.emitter
+      expect { engine.reset }.to change { engine.instance_variable_get(:@emitter) }.to(nil)
     end
   end
 end
