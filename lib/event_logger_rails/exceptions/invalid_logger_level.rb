@@ -9,7 +9,7 @@ module EventLoggerRails
 
       def initialize(logger_level:)
         super
-        @event = EventLoggerRails::Event.new('event_logger_rails.logger_level.invalid')
+        @event = Event.new('event_logger_rails.logger_level.invalid')
         @logger_level = logger_level
       end
 

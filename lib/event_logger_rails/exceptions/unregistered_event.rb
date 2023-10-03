@@ -9,7 +9,7 @@ module EventLoggerRails
 
       def initialize(unregistered_event:)
         super()
-        @event = EventLoggerRails::Event.new('event_logger_rails.event.unregistered')
+        @event = Event.new('event_logger_rails.event.unregistered')
         @unregistered_event = unregistered_event
       end
 
