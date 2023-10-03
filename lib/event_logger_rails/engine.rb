@@ -14,7 +14,7 @@ module EventLoggerRails
     config.event_logger_rails.logdev = "log/event_logger_rails.#{Rails.env}.log"
 
     initializer 'event_logger_rails.add_middleware' do |app|
-      app.middleware.use EventLoggerRails::Middleware::CaptureRequestDetails
+      app.middleware.use Middleware::CaptureRequestDetails
     end
 
     config.after_initialize do |app|
