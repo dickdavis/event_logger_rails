@@ -16,7 +16,7 @@ module EventLoggerRails
     def initialize(provided_identifier)
       @provided_identifier = provided_identifier.to_s
 
-      default_registration = DEFAULT_EVENTS.slice(provided_identifier).to_a.flatten
+      default_registration = DEFAULT_EVENTS.slice(@provided_identifier).to_a.flatten
       @identifier, @description = if default_registration.empty?
                                     config_registration
                                   else
@@ -24,11 +24,21 @@ module EventLoggerRails
                                   end
     end
 
+    def merge(...)
+      to_hash.merge(...)
+    end
+
     def valid?
       identifier.present?
     end
 
-    def to_h
+    def validate!
+      raise EventLoggerRails::Exceptions::UnregisteredEvent.new(unregistered_event: self) unless valid?
+
+      yield(self)
+    end
+
+    def to_hash
       {
         event_identifier: identifier,
         event_description: description

@@ -39,6 +39,23 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
+  describe '#merge' do
+    subject(:method_call) { event.merge(data) }
+
+    let(:identifier) { 'foo.bar' }
+    let(:data) { { test: 'data' } }
+
+    it 'merges the hash representation of the event with the provided data' do
+      expect(method_call).to eq(
+        {
+          event_identifier: event.identifier,
+          event_description: event.description,
+          **data
+        }
+      )
+    end
+  end
+
   describe '#valid?' do
     subject(:method_call) { event.valid? }
 
@@ -75,8 +92,28 @@ RSpec.describe EventLoggerRails::Event do
     end
   end
 
-  describe '#to_h' do
-    subject(:method_call) { event.to_h }
+  describe '#validate!' do
+    subject(:method_call) { event.validate! { |event| event.inspect } } # rubocop:disable Style/SymbolProc
+
+    context 'when event is not valid' do
+      let(:identifier) { 'foobar' }
+
+      it 'raises an exception' do
+        expect { method_call }.to raise_error(EventLoggerRails::Exceptions::UnregisteredEvent)
+      end
+    end
+
+    context 'when event is valid' do
+      let(:identifier) { 'foo.bar' }
+
+      it 'yields self to the block' do
+        expect { |block| event.validate!(&block) }.to yield_with_args(event)
+      end
+    end
+  end
+
+  describe '#to_hash' do
+    subject(:method_call) { event.to_hash }
 
     let(:identifier) { 'foo.bar' }
 

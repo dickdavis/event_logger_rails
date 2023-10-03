@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe EventLoggerRails::EventLogger do
-  subject(:event_logger) do
-    described_class.new(logdev: File.open(File::NULL, 'w'), logger_class: Logger)
+RSpec.describe EventLoggerRails::Emitter do
+  subject(:emitter) do
+    described_class.new(logdev: File.open(File::NULL, 'w'))
   end
 
   describe '#log' do
-    subject(:method_call) { event_logger.log(event, level, **data) }
+    subject(:method_call) { emitter.log(event, level, **data) }
 
     let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
     let(:level) { :warn }
@@ -184,7 +184,7 @@ RSpec.describe EventLoggerRails::EventLogger do
     end
 
     context 'when data is not provided' do
-      subject(:method_call) { event_logger.log(event, level) }
+      subject(:method_call) { emitter.log(event, level) }
 
       # rubocop:disable RSpec/ExampleLength
       it 'logs the default severity, timestamp, event identifier, and description' do

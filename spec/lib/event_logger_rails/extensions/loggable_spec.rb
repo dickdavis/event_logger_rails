@@ -31,18 +31,18 @@ end
 RSpec.describe EventLoggerRails::Extensions::Loggable do
   let(:object) { DummyClass.new }
 
-  let(:logger_spy) { instance_spy(EventLoggerRails::EventLogger) }
+  let(:emitter_spy) { instance_spy(EventLoggerRails::Emitter) }
 
   before do
-    allow(EventLoggerRails::EventLogger).to receive(:new).and_return(logger_spy)
+    allow(EventLoggerRails::Emitter).to receive(:new).and_return(emitter_spy)
   end
 
   context 'without additional data provided' do
     before { EventLoggerRails.reset }
 
-    it 'calls the event logger' do
+    it 'calls the emitter' do
       object.test_one
-      expect(logger_spy)
+      expect(emitter_spy)
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',
@@ -55,9 +55,9 @@ RSpec.describe EventLoggerRails::Extensions::Loggable do
   context 'with additional data provided' do
     before { EventLoggerRails.reset }
 
-    it 'calls the event logger' do
+    it 'calls the emitter with additional data' do
       object.test_two
-      expect(logger_spy)
+      expect(emitter_spy)
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',
@@ -70,9 +70,9 @@ RSpec.describe EventLoggerRails::Extensions::Loggable do
   context 'with optional logger level provided' do
     before { EventLoggerRails.reset }
 
-    it 'calls the event logger' do
+    it 'calls the emitter with optional level' do
       object.test_three
-      expect(logger_spy)
+      expect(emitter_spy)
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',

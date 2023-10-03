@@ -29,19 +29,19 @@ RSpec.describe EventLoggerRails::LoggableModel, type: :model do
     }
   end
 
-  let(:logger_spy) { instance_spy(EventLoggerRails::EventLogger) }
+  let(:emitter_spy) { instance_spy(EventLoggerRails::Emitter) }
 
   before do
-    allow(EventLoggerRails::EventLogger).to receive(:new).and_return(logger_spy)
+    allow(EventLoggerRails::Emitter).to receive(:new).and_return(emitter_spy)
   end
 
   after do
     EventLoggerRails.reset
   end
 
-  it 'calls the event logger with data from the model' do
+  it 'calls the emitter with data from the model' do
     model_instance.test
-    expect(logger_spy)
+    expect(emitter_spy)
       .to have_received(:log)
       .with(
         'event_logger_rails.event.testing',
