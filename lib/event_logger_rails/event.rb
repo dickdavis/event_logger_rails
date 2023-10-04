@@ -11,17 +11,17 @@ module EventLoggerRails
     }.freeze
     private_constant :DEFAULT_EVENTS
 
-    attr_reader :identifier, :description
+    attr_reader :identifier, :description, :level
 
     def initialize(provided_identifier)
       @provided_identifier = provided_identifier.to_s
 
       default_registration = DEFAULT_EVENTS.slice(@provided_identifier).to_a.flatten
-      @identifier, @description = if default_registration.empty?
-                                    config_registration
-                                  else
-                                    default_registration
-                                  end
+      @identifier, @description, @level = if default_registration.empty?
+                                            config_registration
+                                          else
+                                            default_registration
+                                          end
     end
 
     def merge(...)
@@ -59,10 +59,14 @@ module EventLoggerRails
 
     def config_registration
       parsed_event = provided_identifier.split('.').map(&:to_sym)
-      if (description = EventLoggerRails.registered_events.dig(*parsed_event))
-        [provided_identifier, description]
+      config = EventLoggerRails.registered_events.dig(*parsed_event)
+      case config
+      in { description:, level: }
+        [provided_identifier, description, level]
+      in { description: }
+        [provided_identifier, description, nil]
       else
-        [nil, nil]
+        [nil, nil, nil]
       end
     end
   end
