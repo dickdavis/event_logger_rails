@@ -5,8 +5,12 @@ module EventLoggerRails
     ##
     # Provides event logging with relevant model data.
     module Loggable
-      def log_event(event, level: :warn, data: {})
-        EventLoggerRails.log(event, level, data.merge(optional_data))
+      def log_event(event, **kwargs)
+        EventLoggerRails.log(
+          event,
+          level: kwargs[:level] || nil,
+          data: (kwargs[:data] || {}).merge(optional_data)
+        )
       end
 
       private

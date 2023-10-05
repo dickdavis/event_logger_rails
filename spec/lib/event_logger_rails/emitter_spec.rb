@@ -8,7 +8,7 @@ RSpec.describe EventLoggerRails::Emitter do
   end
 
   describe '#log' do
-    subject(:method_call) { emitter.log(event, level, **data) }
+    subject(:method_call) { emitter.log(event, level:, data:) }
 
     let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
     let(:level) { :warn }
@@ -184,7 +184,7 @@ RSpec.describe EventLoggerRails::Emitter do
     end
 
     context 'when data is not provided' do
-      subject(:method_call) { emitter.log(event, level) }
+      subject(:method_call) { emitter.log(event, level:) }
 
       # rubocop:disable RSpec/ExampleLength
       it 'logs the default severity, timestamp, event identifier, and description' do

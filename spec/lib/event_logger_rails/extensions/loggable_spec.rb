@@ -46,8 +46,10 @@ RSpec.describe EventLoggerRails::Extensions::Loggable do
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',
-          :warn,
-          { foo: 'bar' }
+          {
+            level: nil,
+            data: { foo: 'bar' }
+          }
         )
     end
   end
@@ -61,8 +63,10 @@ RSpec.describe EventLoggerRails::Extensions::Loggable do
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',
-          :warn,
-          { foo: 'bar', test: 'two' }
+          {
+            level: nil,
+            data: { foo: 'bar', test: 'two' }
+          }
         )
     end
   end
@@ -76,8 +80,10 @@ RSpec.describe EventLoggerRails::Extensions::Loggable do
         .to have_received(:log)
         .with(
           'event_logger_rails.event.testing',
-          :info,
-          { foo: 'bar' }
+          {
+            level: :info,
+            data: { foo: 'bar' }
+          }
         )
     end
   end
