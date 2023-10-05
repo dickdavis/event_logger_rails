@@ -11,7 +11,7 @@ module EventLoggerRails
     def log(event, level:, data: {})
       Event.new(event).validate! do |validated_event|
         message = Message.new(event: validated_event, data:)
-        level = (level.present? ? level : event.level) || EventLoggerRails.default_level
+        level = level || validated_event.level || EventLoggerRails.default_level
         log_message(message, level.to_sym)
       end
     rescue Exceptions::UnregisteredEvent, Exceptions::InvalidLoggerLevel => error

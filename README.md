@@ -3,7 +3,7 @@
 ![Elrika in the Wired](elrika-in-the-wired.png?raw=true)
 *Elrika in the Wired, the mascot for `EventLoggerRails`*
 
-Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into cryptic gems of understanding. 💎
+Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into enlightened gems of understanding. 💎
 
 ### Visualize This
 
@@ -25,16 +25,21 @@ Don't let crucial events get lost in the digital void. Make your app's logging a
 ## Usage
 
 You can define a registry of events your application emits via the config file (`config/event_logger_rails.yml`).
-The events you define are placed in the `registered_events` structure in the config file.
+The events you define are placed in the config file under the corresponding environment. Most events belong in `shared`, though you may want to define different
+events or event characteristics per environment.
 
-For example, to register a user signup event, first define the event as a registered event:
+For example, to register a user signup event, first define the event as a registered event. You must include a `description` for the event, and you may
+optionally include a `level` to use for that specific event.
 
 ```yaml
-registered_events:
+shared:
   user:
     signup:
-      success: 'Indicates a user signup was successful.'
-      failure: 'Indicates a user signup was not successful.'
+      success:
+        description: 'Indicates a successful user signup.'
+      failure:
+        description: 'Indicates a user signup was not successful.'
+        level: 'error'
 ```
 
 ### Logging in Controllers
@@ -97,7 +102,7 @@ In this example, a possible successful signup could be structured like this:
   "host": "d6aeb6b0516c",
   "id": "2b8f44c1-0e42-4a5f-84b8-52656690d138",
   "service_name": "DummyApp",
-  "level": "WARN",
+  "level": "ERROR",
   "method": "POST",
   "parameters": {
     "authenticity_token": "[FILTERED]",
@@ -123,10 +128,11 @@ In this example, a possible successful signup could be structured like this:
 
 Note how the log entry from the previous example contains the data passed in via the optional `data` argument.
 
-You can also provide a logger level as an optional argument if you need to specify a logger level other than the default:
+You can also provide a logger level as an optional argument if you need to specify a logger level other than the default. If you provide a logger level, it
+will override the configured event level and the default logger level.
 
 ```ruby
-log_event 'user.signup.failure', level: :error, data: { errors: user.errors }
+log_event 'user.signup.failure', level: :info, data: { errors: user.errors }
 ```
 
 This will output an event with the corresponding severity level. You must provide a valid logger level (`:debug, :info, :warn, :error, or :unknown`).
@@ -138,7 +144,7 @@ This will output an event with the corresponding severity level. You must provid
   "host": "d6aeb6b0516c",
   "id": "2b8f44c1-0e42-4a5f-84b8-52656690d138",
   "service_name": "DummyApp",
-  "level": "ERROR",
+  "level": "INFO",
   "method": "POST",
   "parameters": {
     "authenticity_token": "[FILTERED]",
@@ -215,7 +221,7 @@ You can log events from anywhere inside of your application by calling `EventLog
 from the request.
 
 ```ruby
-EventLoggerRails.log 'user.signup.success', :info, { user_id: @user.id }
+EventLoggerRails.log 'user.signup.success', level: :info, data: { user_id: @user.id }
 ```
 
 ### Errors
@@ -305,12 +311,29 @@ bin/rails generate event_logger_rails:install
 
 Add your events to the generated config file following the structure of the examples.
 
+You can specify a default level `EventLoggerRails` will use if a level is not included in the call to the logger or configured as a default for the provided event.
+This default level is set to `:warn` unless otherwise specified.
+
+```ruby
+Rails.application.configure do |config|
+  config.event_logger_rails.default_level = :info
+end
+```
+
 By default, `EventLoggerRails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
 you to ingest these logs independently. If you wish to set an alternative log device to capture output, you can configure it in `config/application.rb`:
 
 ```ruby
 Rails.application.configure do |config|
   config.event_logger_rails.logdev = 'path/to/log.file'
+end
+```
+
+Some platforms require logging output to be sent to $STDOUT. You can configure this as an output device easily enough.
+
+```ruby
+Rails.application.configure do |config|
+  config.event_logger_rails.logdev = $stdout
 end
 ```
 
