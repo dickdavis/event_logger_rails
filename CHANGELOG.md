@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0]
+
+### Added
+
+- Added support for configurable log levels per event.
+- Added support for specifying default log level.
+- Added support for specifying log device.
+- Added model concern for logging events in model layer.
+- Added middleware to capture request details for logging.
+- Added code quality tooling.
+
+### Changed
+
+- (Breaking) Changed interface for logging events.
+- (Breaking) Changed config file structure.
+- Changed default log device to be separate log file per environment.
+- Refactored most of the application to make the engine more robust and maintainable.
+- Switched test framework to RSpec.
+
+### Fixed
+
+- Fixed log output to output only in JSON (removed tags).
+
+### Removed
+
+- (Breaking) Removed support for versions of Ruby previous to `3.1.4`.
+- (Breaking) Removed support for versions of Rails previous to `7`.
+
 ## [0.2.1] - 2021-12-27
 
 ### Fixed
@@ -36,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[Unreleased]: https://github.com/d3d1rty/event_logger_rails/compare/0.2.1...HEAD
+[Unreleased]: https://github.com/d3d1rty/event_logger_rails/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/d3d1rty/event_logger_rails/compare/0.2.1...0.3.0
 [0.2.1]: https://github.com/d3d1rty/event_logger_rails/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/d3d1rty/event_logger_rails/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/d3d1rty/event_logger_rails/releases/tag/0.1.0

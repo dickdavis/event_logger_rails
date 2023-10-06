@@ -7,16 +7,19 @@ Gem::Specification.new do |spec|
   spec.version     = EventLoggerRails::VERSION
   spec.authors     = ['Dick Davis']
   spec.email       = ['dick@hey.com']
-  spec.homepage    = 'https://github.com/d3d1rty/event_logger_rails'
-  spec.summary     = 'Rails gem that facilitates logging events for analysis.'
-  spec.description = 'Rails gem that facilitates logging events for analysis.'
+  spec.homepage    = 'https://github.com/dickdavis/event_logger_rails'
   spec.license     = 'MIT'
+  spec.summary     = 'Rails gem weaving the fabric of logged events into tapestries for analytic reverie.'
+  spec.description = <<~TEXT
+    EventLoggerRails is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
+    It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.
+  TEXT
 
   spec.metadata = {
     'rubygems_mfa_required' => 'true',
     'homepage_uri' => spec.homepage,
-    'source_code_uri' => 'https://github.com/d3d1rty/event_logger_rails',
-    'changelog_uri' => 'https://github.com/d3d1rty/event_logger_rails/blob/main/CHANGELOG.md'
+    'source_code_uri' => 'https://github.com/dickdavis/event_logger_rails/tree/0.3.0',
+    'changelog_uri' => 'https://github.com/dickdavis/event_logger_rails/blob/0.3.0/CHANGELOG.md'
   }
 
   spec.files = Dir['{app,config,db,lib}/**/*', 'LICENSE', 'Rakefile', 'README.md']
