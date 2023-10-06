@@ -6,18 +6,18 @@ RSpec.describe EventLoggerRails do
   subject(:engine) { described_class }
 
   describe '.setup' do
-    describe 'registered events' do
+    describe 'default_level' do
       subject(:engine_setup) do
         engine.setup do |config|
-          config.registered_events = events
+          config.default_level = default_level
         end
       end
 
-      let(:events) { 'foobar' }
+      let(:default_level) { :info }
 
-      it 'configures the registered events' do
+      it 'configures the default level for the logger' do
         engine_setup
-        expect(described_class.registered_events).to eq(events)
+        expect(described_class.default_level).to eq(default_level)
       end
     end
 
@@ -33,6 +33,21 @@ RSpec.describe EventLoggerRails do
       it 'configures the output device to use for initializing the logger' do
         engine_setup
         expect(described_class.logdev).to eq(logdev)
+      end
+    end
+
+    describe 'registered events' do
+      subject(:engine_setup) do
+        engine.setup do |config|
+          config.registered_events = events
+        end
+      end
+
+      let(:events) { 'foobar' }
+
+      it 'configures the registered events' do
+        engine_setup
+        expect(described_class.registered_events).to eq(events)
       end
     end
   end

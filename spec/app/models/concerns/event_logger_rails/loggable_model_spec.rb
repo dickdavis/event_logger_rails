@@ -45,8 +45,8 @@ RSpec.describe EventLoggerRails::LoggableModel, type: :model do
       .to have_received(:log)
       .with(
         'event_logger_rails.event.testing',
-        :warn,
-        hash_including(data_from_model)
+        level: nil,
+        data: hash_including(data_from_model)
       )
   end
 end

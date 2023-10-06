@@ -8,7 +8,7 @@ RSpec.describe EventLoggerRails::Emitter do
   end
 
   describe '#log' do
-    subject(:method_call) { emitter.log(event, level, **data) }
+    subject(:method_call) { emitter.log(event, level:, data:) }
 
     let(:event) { EventLoggerRails::Event.new('event_logger_rails.event.testing') }
     let(:level) { :warn }
@@ -156,6 +156,74 @@ RSpec.describe EventLoggerRails::Emitter do
       # rubocop:enable RSpec/ExampleLength
     end
 
+    context 'when no logger level is provided and a level is configured for event' do
+      let(:event) { 'foo.bar' }
+      let(:level) { nil }
+
+      before do
+        EventLoggerRails.setup do |config|
+          config.registered_events = { foo: { bar: { description: 'foobar', level: 'info' } } }
+          config.default_level = 'debug'
+        end
+      end
+
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the configured severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          environment: 'test',
+          event_description: 'foobar',
+          event_identifier: 'foo.bar',
+          format: 'text/html',
+          host: anything,
+          id: '1234',
+          level: 'INFO',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
+        )
+      end
+      # rubocop:enable RSpec/ExampleLength
+    end
+
+    context 'when no logger level is provided and no level is configured for event' do
+      let(:event) { 'foo.bar' }
+      let(:level) { nil }
+
+      before do
+        EventLoggerRails.setup do |config|
+          config.registered_events = { foo: { bar: { description: 'foobar' } } }
+          config.default_level = 'debug'
+        end
+      end
+
+      # rubocop:disable RSpec/ExampleLength
+      it 'logs the default severity, timestamp, event identifier, description, and data' do
+        method_call
+        log_output = JSON.parse(buffer.string, symbolize_names: true)
+        expect(log_output).to include(
+          environment: 'test',
+          event_description: 'foobar',
+          event_identifier: 'foo.bar',
+          format: 'text/html',
+          host: anything,
+          id: '1234',
+          level: 'DEBUG',
+          method: 'GET',
+          parameters: { foo: 'bar' },
+          path: '/',
+          remote_ip: '10.1.1.1',
+          service_name: 'Dummy',
+          timestamp: match(/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?([+-]\d{2}:\d{2}|Z)?\z/)
+        )
+      end
+      # rubocop:enable RSpec/ExampleLength
+    end
+
     context 'when the logger level is not valid' do
       let(:level) { :foo }
 
@@ -184,7 +252,7 @@ RSpec.describe EventLoggerRails::Emitter do
     end
 
     context 'when data is not provided' do
-      subject(:method_call) { emitter.log(event, level) }
+      subject(:method_call) { emitter.log(event, level:) }
 
       # rubocop:disable RSpec/ExampleLength
       it 'logs the default severity, timestamp, event identifier, and description' do

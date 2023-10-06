@@ -8,13 +8,14 @@ module EventLoggerRails
       @logger = JsonLogger.new(logdev)
     end
 
-    def log(event, level, data = {})
+    def log(event, level:, data: {})
       Event.new(event).validate! do |validated_event|
         message = Message.new(event: validated_event, data:)
-        log_message(message, level)
+        level = level || validated_event.level || EventLoggerRails.default_level
+        log_message(message, level.to_sym)
       end
     rescue Exceptions::UnregisteredEvent, Exceptions::InvalidLoggerLevel => error
-      log(error.event, :error, { message: error.message })
+      log(error.event, level: :error, data: { message: error.message })
     end
 
     private

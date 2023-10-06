@@ -8,7 +8,11 @@
 # shared:
 #   user:
 #     signup:
-#       success: 'Indicates a successful user signup.'
+#       success:
+#         description: 'Indicates a successful user signup.'
+#       failure:
+#         description: 'Indicates a user signup was not successful.'
+#         level: 'error'
 #
 shared:
 

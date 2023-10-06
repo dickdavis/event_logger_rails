@@ -18,6 +18,7 @@ require 'event_logger_rails/version'
 ##
 # Namespace for EventLoggerRails gem
 module EventLoggerRails
+  mattr_accessor :default_level
   mattr_accessor :logdev
   mattr_accessor :registered_events
   mattr_accessor :sensitive_fields

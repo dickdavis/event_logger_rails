@@ -5,10 +5,12 @@ require 'rails_helper'
 RSpec.describe EventLoggerRails::Event do
   subject(:event) { described_class.new(identifier) }
 
+  let(:event_config) { { description: 'This is an event.' } }
+
   before do
     EventLoggerRails.setup do |config|
       config.registered_events = {
-        foo: { bar: 'This is an event.' }
+        foo: { bar: event_config }
       }
     end
   end
@@ -23,6 +25,20 @@ RSpec.describe EventLoggerRails::Event do
 
       it 'description contains the corresponding description' do
         expect(event.description).to eq('This is an event.')
+      end
+
+      context 'when a level is not provided' do
+        it 'level is nil' do
+          expect(event.level).to be_nil
+        end
+      end
+
+      context 'when a level is provided' do
+        let(:event_config) { { description: 'This is an event.', level: :warn } }
+
+        it 'level contains the configured level' do
+          expect(event.level).to eq(:warn)
+        end
       end
     end
 

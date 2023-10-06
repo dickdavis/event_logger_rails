@@ -5,23 +5,31 @@ module EventLoggerRails
   # Models an event for logging.
   class Event
     DEFAULT_EVENTS = {
-      'event_logger_rails.logger_level.invalid' => 'Indicates provided level was invalid.',
-      'event_logger_rails.event.unregistered' => 'Indicates provided event was unregistered.',
-      'event_logger_rails.event.testing' => 'Event reserved for testing.'
+      'event_logger_rails.logger_level.invalid' => {
+        description: 'Indicates provided level was invalid.',
+        level: :error
+      },
+      'event_logger_rails.event.unregistered' => {
+        description: 'Indicates provided event was unregistered.',
+        level: :error
+      },
+      'event_logger_rails.event.testing' => {
+        description: 'Event reserved for testing.',
+        level: :warn
+      }
     }.freeze
     private_constant :DEFAULT_EVENTS
 
-    attr_reader :identifier, :description
+    attr_reader :identifier, :description, :level
 
     def initialize(provided_identifier)
       @provided_identifier = provided_identifier.to_s
 
-      default_registration = DEFAULT_EVENTS.slice(@provided_identifier).to_a.flatten
-      @identifier, @description = if default_registration.empty?
-                                    config_registration
-                                  else
-                                    default_registration
-                                  end
+      if (default_event = DEFAULT_EVENTS[@provided_identifier])
+        default_registration = [@provided_identifier, *default_event&.values]
+      end
+
+      @identifier, @description, @level = default_registration || config_registration
     end
 
     def merge(...)
@@ -59,10 +67,14 @@ module EventLoggerRails
 
     def config_registration
       parsed_event = provided_identifier.split('.').map(&:to_sym)
-      if (description = EventLoggerRails.registered_events.dig(*parsed_event))
-        [provided_identifier, description]
+      config = EventLoggerRails.registered_events.dig(*parsed_event)
+      case config
+      in { description:, level: }
+        [provided_identifier, description, level]
+      in { description: }
+        [provided_identifier, description, nil]
       else
-        [nil, nil]
+        [nil, nil, nil]
       end
     end
   end
