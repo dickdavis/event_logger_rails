@@ -1,7 +1,7 @@
 ## 🔌 EventLoggerRails 💾
 
-![Elrika in the Wired](elrika-in-the-wired.png?raw=true)
-*Elrika in the Wired, the mascot for `EventLoggerRails`*
+![Elara](elara.png?raw=true)
+*Elara, the mascot for `EventLoggerRails`*
 
 Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into enlightened gems of understanding. 💎
 
@@ -21,6 +21,13 @@ Channel these JSON enigmas directly into analytic realms like OpenSearch. There,
 - 🔍 **In-Depth Insight**: Elevate your business process analysis with granular, structured logging.
 
 Don't let crucial events get lost in the digital void. Make your app's logging as unforgettable as your first journey into the Wired with `EventLoggerRails`!
+
+### Huh?
+
+Ok, so Elara might be a little zealous about our project, and she seems to be stuck in a 90's anime. Don't let that dissuade you from using this engine, though.
+
+Our no-nonsense project description: **`EventLoggerRails` is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
+It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.**
 
 ## Usage
 
@@ -218,7 +225,7 @@ By default, `EventLoggerRails` will include the model name, instance ID, and wha
 ### Logging Everywhere Else
 
 You can log events from anywhere inside of your application by calling `EventLoggerRails.log` directly, though you won't get the additional context
-from the request.
+from the controller or model.
 
 ```ruby
 EventLoggerRails.log 'user.signup.success', level: :info, data: { user_id: @user.id }
