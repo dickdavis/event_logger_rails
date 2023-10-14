@@ -344,6 +344,17 @@ Rails.application.configure do |config|
 end
 ```
 
+You can also configure the Rails logger to use `EventLoggerRails::JsonLogger` to render structured logs in JSON format with the additional app and request data.
+
+```ruby
+Rails.application.configure do
+  config.colorize_logging = false
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', :info)
+  logger = EventLoggerRails::JsonLogger.new($stdout)
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
+end
+```
+
 ## Contributing
 
 Your inputs echo in this realm. Venture forth and materialize your thoughts through a PR.
