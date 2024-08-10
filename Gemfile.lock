@@ -126,6 +126,8 @@ GEM
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    nokogiri (1.15.4-x86_64-linux)
+      racc (~> 1.4)
     overcommit (0.58.0)
       childprocess (>= 0.6.3, < 5)
       iniparse (~> 1.4)
@@ -167,6 +169,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.0.0)
     rake (13.0.6)
+    redcarpet (3.6.0)
     reek (6.0.6)
       kwalify (~> 0.7.0)
       parser (~> 3.0.0)
@@ -251,6 +254,7 @@ DEPENDENCIES
   debug
   event_logger_rails!
   overcommit
+  redcarpet
   reek
   rspec-rails
   rubocop
@@ -260,6 +264,7 @@ DEPENDENCIES
   solargraph-rails
   sqlite3
   warning
+  yard
 
 BUNDLED WITH
    2.2.21

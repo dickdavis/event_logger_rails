@@ -7,6 +7,7 @@ gemspec
 
 group :development do
   gem 'overcommit'
+  gem 'redcarpet'
   gem 'reek'
   gem 'rubocop'
   gem 'rubocop-performance', require: false
@@ -14,6 +15,7 @@ group :development do
   gem 'solargraph'
   gem 'solargraph-rails'
   gem 'sqlite3'
+  gem 'yard'
 end
 
 group :test do
