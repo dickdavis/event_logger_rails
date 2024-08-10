@@ -7,6 +7,9 @@ module EventLoggerRails
     extend ActiveSupport::Concern
     include EventLoggerRails::Extensions::Loggable
 
+    # Includes the model name and instance ID in the log output.
+    #
+    # @return [Hash] The data to include in log output.
     def optional_data
       {
         model: self.class.name,
