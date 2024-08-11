@@ -10,13 +10,13 @@ module EventLoggerRails
     # Includes the controller name and action in the log output.
     #
     # @return [Hash] The data to include in log output.
-    def optional_data
+    def optional_event_logger_data
       {
         action: action_name,
         controller: controller_name.camelcase
       }
     end
 
-    private :optional_data
+    private :optional_event_logger_data
   end
 end

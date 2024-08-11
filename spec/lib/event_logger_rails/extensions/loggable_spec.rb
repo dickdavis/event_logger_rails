@@ -21,7 +21,7 @@ class DummyClass
 
   private
 
-  def optional_data
+  def optional_event_logger_data
     {
       foo: 'bar'
     }
