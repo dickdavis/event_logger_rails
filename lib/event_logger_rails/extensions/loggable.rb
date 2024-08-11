@@ -2,9 +2,13 @@
 
 module EventLoggerRails
   module Extensions
-    ##
-    # Provides event logging with relevant model data.
+    # Provides event logging with optional data.
     module Loggable
+      # Logs an event with the given level and data.
+      #
+      # @param event [EventLoggerRails::Event] The event to log.
+      # @option kwargs [Symbol] :level The level of the event.
+      # @option kwargs [Hash] :data The data of the event.
       def log_event(event, **kwargs)
         EventLoggerRails.log(
           event,
@@ -15,6 +19,10 @@ module EventLoggerRails
 
       private
 
+      # Optional data to include in log output.
+      #
+      # @return [Hash] The data to include in log output.
+      # @note This method can be overridden by classes that implement Loggable.
       def optional_data
         {}
       end

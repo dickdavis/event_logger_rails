@@ -4,7 +4,14 @@ require 'rails_helper'
 
 RSpec.describe EventLoggerRails::Emitter do
   subject(:emitter) do
-    described_class.new(logdev: File.open(File::NULL, 'w'))
+    described_class.new
+  end
+
+  before do
+    EventLoggerRails.setup do |config|
+      config.formatter = 'EventLoggerRails::Formatters::JSON'
+      config.logger_class = 'EventLoggerRails::EventLogger'
+    end
   end
 
   describe '#log' do

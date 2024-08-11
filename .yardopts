@@ -1,0 +1,3 @@
+--output-dir docs/
+--private
+--markup=markdown

@@ -36,6 +36,36 @@ RSpec.describe EventLoggerRails do
       end
     end
 
+    describe 'formatter' do
+      subject(:engine_setup) do
+        engine.setup do |config|
+          config.formatter = formatter_class
+        end
+      end
+
+      let(:formatter_class) { 'EventLoggerRails::Formatters::JSON' }
+
+      it 'configures the formatter to use for initializing the logger' do
+        engine_setup
+        expect(described_class.formatter).to eq(formatter_class)
+      end
+    end
+
+    describe 'logger_class' do
+      subject(:engine_setup) do
+        engine.setup do |config|
+          config.logger_class = logger_class
+        end
+      end
+
+      let(:logger_class) { 'EventLoggerRails::EventLogger' }
+
+      it 'configures the output device to use for initializing the logger' do
+        engine_setup
+        expect(described_class.logger_class).to eq(logger_class)
+      end
+    end
+
     describe 'registered events' do
       subject(:engine_setup) do
         engine.setup do |config|
