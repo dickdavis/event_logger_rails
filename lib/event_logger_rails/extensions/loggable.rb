@@ -13,7 +13,7 @@ module EventLoggerRails
         EventLoggerRails.log(
           event,
           level: kwargs[:level] || nil,
-          data: (kwargs[:data] || {}).merge(optional_data)
+          data: (kwargs[:data] || {}).merge(optional_event_logger_data)
         )
       end
 
@@ -23,7 +23,7 @@ module EventLoggerRails
       #
       # @return [Hash] The data to include in log output.
       # @note This method can be overridden by classes that implement Loggable.
-      def optional_data
+      def optional_event_logger_data
         {}
       end
     end
