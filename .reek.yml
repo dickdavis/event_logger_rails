@@ -6,8 +6,18 @@ detectors:
     max_statements: 10
   FeatureEnvy:
     exclude:
-      - EventLoggerRails::Extensions::Loggable#details_for_trace
+      - EventLoggerRails::Extensions::Loggable#log_event
+      - EventLoggerRails::Middleware::CaptureRequestDetails#call
+  LongParameterList:
+    exclude:
+      - EventLoggerRails::Formatters::JSON#call
+  ManualDispatch:
+    exclude:
+      - EventLoggerRails::Output#initialize
+  MissingSafeMethod:
+    exclude:
+      - EventLoggerRails::Event
   UtilityFunction:
     exclude:
-      - EventLoggerRails::Extensions::Loggable#details_for_trace
-      - EventLoggerRails::EventLogger#structured_output
+      - EventLoggerRails::Formatters::JSON#call
+      - EventLoggerRails::Output#application_data
