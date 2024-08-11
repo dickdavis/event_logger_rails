@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module EventLoggerRails
-  ##
   # Processes events, sending data to logger.
   class Emitter
-    ## Initializes the emitter using the given log device for log output.
-    #
-    # @param logdev [IO, #write] The log device for log output.
-    def initialize(logdev:)
-      @logger = JsonLogger.new(logdev)
+    # Initializes the emitter.
+    # It references the configured log device for log output.
+    # It references the configured logger class for logging, falling back to EventLogger.
+    def initialize
+      logdev = EventLoggerRails.logdev
+      @logger = EventLoggerRails.logger_class.constantize.new(logdev) || EventLoggerRails::EventLogger.new(logdev)
     end
 
     # Validates and logs an event with the given level and data.
@@ -20,7 +20,7 @@ module EventLoggerRails
     # @param data [Hash] Additional data to log.
     # @return [Integer] The number of bytes written to the log.
     # @example
-    #   emitter = EventLoggerRails::Emitter.new(logdev: $stdout)
+    #   emitter = EventLoggerRails::Emitter.new
     #   emitter.log('foo.bar.baz', level: :info, data: { foo: 'bar' })
     def log(event, level:, data: {})
       Event.new(event).validate! do |validated_event|

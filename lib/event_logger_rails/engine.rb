@@ -13,8 +13,9 @@ module EventLoggerRails
 
     # Initialize the EventLoggerRails configuration.
     config.event_logger_rails = ActiveSupport::OrderedOptions.new
+    config.event_logger_rails.formatter = 'EventLoggerRails::Formatters::JSON'
     config.event_logger_rails.logdev = "log/event_logger_rails.#{Rails.env}.log"
-    config.event_logger_rails.logger_class = 'EventLoggerRails::JsonLogger'
+    config.event_logger_rails.logger_class = 'EventLoggerRails::EventLogger'
     config.event_logger_rails.default_level = :warn
 
     # Add the EventLoggerRails middleware.
@@ -28,13 +29,15 @@ module EventLoggerRails
       EventLoggerRails.setup do |engine|
         # Set the default logging level from the registration.
         engine.default_level = app.config.event_logger_rails.default_level
-        # Set the log device from the registration.
+        # Set the formatter.
+        engine.formatter = app.config.event_logger_rails.formatter
+        # Set the log device.
         engine.logdev = app.config.event_logger_rails.logdev
-        # Set the logger class from the registration.
+        # Set the logger class.
         engine.logger_class = app.config.event_logger_rails.logger_class
         # Set the registered events from the registration.
         engine.registered_events = Rails.application.config_for(:event_logger_rails)
-        # Set the sensitive fields from the registration.
+        # Set the sensitive fields.
         engine.sensitive_fields = app.config.filter_parameters
       end
     end
