@@ -327,6 +327,14 @@ Rails.application.configure do |config|
 end
 ```
 
+You can configure a custom formatter. Reference `EventLoggerRails::Formatters::JSON` for an example.
+
+```ruby
+Rails.application.configure do |config|
+  config.event_logger_rails.formatter = 'MyCustomFormatterClass'
+end
+```
+
 By default, `EventLoggerRails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
 you to ingest these logs independently. If you wish to set an alternative log device to capture output, you can configure it in `config/application.rb`:
 
@@ -344,13 +352,21 @@ Rails.application.configure do |config|
 end
 ```
 
-You can also configure the Rails logger to use `EventLoggerRails::JsonLogger` to render structured logs in JSON format with the additional app and request data.
+You can configure a custom logger. Reference `EventLoggerRails::EventLogger` for an example.
+
+```ruby
+Rails.application.configure do |config|
+  config.event_logger_rails.logger_class = 'MyCustomLoggerClass'
+end
+```
+
+You can also configure the Rails logger to use `EventLoggerRails::EventLogger` to render structured logs in JSON format with the additional app and request data.
 
 ```ruby
 Rails.application.configure do
   config.colorize_logging = false
   config.log_level = ENV.fetch('RAILS_LOG_LEVEL', :info)
-  logger = EventLoggerRails::JsonLogger.new($stdout)
+  logger = EventLoggerRails::EventLogger.new($stdout)
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 end
 ```
