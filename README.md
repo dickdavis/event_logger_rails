@@ -1,33 +1,7 @@
-## 🔌 EventLoggerRails 💾
+## event_logger_rails
 
-![Elara](elara.png?raw=true)
-*Elara, the mascot for `EventLoggerRails`*
-
-Are you tired of navigating through logs as if you're lost in the labyrinth of the Wired, searching for that elusive piece of data? Say "Hello, World!" to `EventLoggerRails`, the Rails engine transmuting your logs into enlightened gems of understanding. 💎
-
-### Visualize This
-
-In a single, centralized config file, decipher the events that pulse through the veins of your business. Once set, let `EventLoggerRails` weave them into intricate patterns of JSON logs that shimmer like a digital mirage. 🎇
-
-### Yet, The Nexus Expands
-
-Channel these JSON enigmas directly into analytic realms like OpenSearch. There, witness the alchemy of data taking form through real-time visualizations and analysis. 📊✨
-
-### Why Choose `EventLoggerRails`?
-
-- 🚀 **Fast Setup**: Get your logging up and running in minutes, not hours!
-- 🌐 **Team-Friendly Event Registry**: Simplify how your team defines and logs business-critical events.
-- 📚 **Readable**: Logs in a clean, JSON-formatted structure for easy parsing and analysis.
-- 🔍 **In-Depth Insight**: Elevate your business process analysis with granular, structured logging.
-
-Don't let crucial events get lost in the digital void. Make your app's logging as unforgettable as your first journey into the Wired with `EventLoggerRails`!
-
-### Huh?
-
-Ok, so Elara might be a little zealous about our project, and she seems to be stuck in a 90's anime. Don't let that dissuade you from using this engine, though.
-
-Our no-nonsense project description: **`EventLoggerRails` is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
-It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.**
+`event_logger_rails` is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
+It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.
 
 ## Usage
 
@@ -193,7 +167,7 @@ class User < ApplicationRecord
 end
 ```
 
-By default, `EventLoggerRails` will include the model name, instance ID, and whatever data is passed.
+By default, `event_logger_rails` will include the model name, instance ID, and whatever data is passed.
 
 ```json
 {
@@ -233,7 +207,7 @@ EventLoggerRails.log 'user.signup.success', level: :info, data: { user_id: @user
 
 ### Errors
 
-There are two expected errors which are handled by `EventLoggerRails`: an unregistered event and an invalid logger level. Both will result
+There are two expected errors which are handled by `event_logger_rails`: an unregistered event and an invalid logger level. Both will result
 in a log entry with an event corresponding to the error, and the severity level will be set to `ERROR`.
 
 If you fail to register an event, the logger will emit an `event_logger_rails.event.unregistered` event:
@@ -318,7 +292,7 @@ bin/rails generate event_logger_rails:install
 
 Add your events to the generated config file following the structure of the examples.
 
-You can specify a default level `EventLoggerRails` will use if a level is not included in the call to the logger or configured as a default for the provided event.
+You can specify a default level `event_logger_rails` will use if a level is not included in the call to the logger or configured as a default for the provided event.
 This default level is set to `:warn` unless otherwise specified.
 
 ```ruby
@@ -335,7 +309,7 @@ Rails.application.configure do |config|
 end
 ```
 
-By default, `EventLoggerRails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
+By default, `event_logger_rails` outputs to a separate log file (`log/event_logger_rails.#{Rails.env}.log`) from normal Rails log output, allowing
 you to ingest these logs independently. If you wish to set an alternative log device to capture output, you can configure it in `config/application.rb`:
 
 ```ruby
