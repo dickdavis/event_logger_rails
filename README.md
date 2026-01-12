@@ -3,6 +3,8 @@
 `event_logger_rails` is a Rails engine for emitting structured events in logs during the execution of business processes for analysis and visualization.
 It allows teams to define events in a simple, centralized configuration file, and then log those events in JSON format for further processing.
 
+Note: Rails 8.1 has introduced [structure event reporting](https://edgeguides.rubyonrails.org/8_1_release_notes.html#structured-event-reporting). This is the preferred method of emitting structured events moving forward, and you should transition to using it instead of `event_logger_rails`. This project will no longer receive updates.
+
 ## Usage
 
 You can define a registry of events your application emits via the config file (`config/event_logger_rails.yml`).
